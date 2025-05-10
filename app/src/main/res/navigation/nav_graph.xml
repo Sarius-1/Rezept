@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/einkaufsliste">
+    app:startDestination="@id/rezept">
 
     <fragment
         android:id="@+id/FirstFragment"
@@ -30,6 +30,11 @@
         android:name="com.example.meinkochbuch.Rezept"
         android:label="fragment_rezept"
         tools:layout="@layout/fragment_rezept" />
+    <fragment
+        android:id="@+id/createRezept"
+        android:name="com.example.meinkochbuch.CreateRezept"
+        android:label="fragment_create_rezept"
+        tools:layout="@layout/fragment_create_rezept" />
     <fragment
         android:id="@+id/einkaufsliste"
         android:name="com.example.meinkochbuch.EinkaufslisteFragment"

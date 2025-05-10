@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Wetteranzeige -->
+        <TextView
+            android:id="@+id/weather_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wetter"
+            android:background="#DDDDDD"
+            android:padding="8dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Einkaufsliste Button -->
+        <Button
+            android:id="@+id/button_einkaufsliste"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Einkaufsliste"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/weather_info"
+            app:layout_constraintEnd_toStartOf="@id/menu_button"
+            app:layout_constraintHorizontal_bias="0.5" />
+
+        <!-- Hamburger Menü -->
+        <ImageButton
+            android:id="@+id/menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_more"
+            android:contentDescription="Menü"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Bild -->
+        <ImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="#CCCCCC"
+            app:layout_constraintTop_toBottomOf="@id/button_einkaufsliste"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Sterne-Bewertung -->
+        <LinearLayout
+            android:id="@+id/rating_stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/recipe_image"
+            app:layout_constraintStart_toStartOf="@id/recipe_image"
+            android:padding="8dp">
+
+            <ImageView android:src="@android:drawable/btn_star_big_off" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <ImageView android:src="@android:drawable/btn_star_big_off" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <ImageView android:src="@android:drawable/btn_star_big_off" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <ImageView android:src="@android:drawable/btn_star_big_off" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <ImageView android:src="@android:drawable/btn_star_big_off" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- Rezeptname -->
+        <TextView
+            android:id="@+id/recipe_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Rezeptname"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/recipe_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <!-- Dauer -->
+        <TextView
+            android:id="@+id/recipe_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Dauer: 45 Minuten"
+            app:layout_constraintTop_toBottomOf="@id/recipe_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Zutatenliste -->
+        <TextView
+            android:id="@+id/label_ingredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zutaten:"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/recipe_duration"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <ListView
+            android:id="@+id/list_ingredients"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:nestedScrollingEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/label_ingredients"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Durchführung -->
+        <TextView
+            android:id="@+id/label_steps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anleitung:"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/list_ingredients"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <ListView
+            android:id="@+id/list_steps"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:nestedScrollingEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/label_steps"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingBottom="32dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

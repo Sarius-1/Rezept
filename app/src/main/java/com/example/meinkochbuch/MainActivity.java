@@ -1,77 +1,76 @@
 package com.example.meinkochbuch;
 
-import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.meinkochbuch.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    private TextView weatherText;
+    private Button shoppingListButton;
+    private ImageButton homeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        // Toolbar einrichten
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
 
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+            // Prüfen, ob ActionBar nicht null ist, bevor wir darauf zugreifen
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayShowTitleEnabled(false); // Titel in der Toolbar ausblenden
             }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        } else {
+            Log.e("MainActivity", "Toolbar konnte nicht gefunden werden");
         }
 
-        return super.onOptionsItemSelected(item);
+        // UI-Elemente initialisieren
+        shoppingListButton = findViewById(R.id.shopping_list_button);
+        homeButton = findViewById(R.id.home_button);
+
+        // Event-Handler hinzufügen
+        if (shoppingListButton != null) {
+            shoppingListButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Hier Code für den Einkaufslisten-Button einfügen
+                    Toast.makeText(MainActivity.this, "Einkaufsliste geöffnet", Toast.LENGTH_SHORT).show();
+                    // z.B. startActivity(new Intent(MainActivity.this, ShoppingListActivity.class));
+                }
+            });
+        }
+
+        if (homeButton != null) {
+            homeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Hier Code für den Home-Button einfügen
+                    Toast.makeText(MainActivity.this, "Home Button gedrückt", Toast.LENGTH_SHORT).show();
+                    // z.B. Navigation zur Startseite oder App neu laden
+                }
+            });
+        }
+
+        // Hier später den Wetter-Text aktualisieren
+        updateWeatherInfo();
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+    private void updateWeatherInfo() {
+        // In einer echten App würdest du hier eine Wetter-API abfragen
+        // Dies ist nur ein Beispiel
+        if (weatherText != null) {
+            weatherText.setText("21°C Sonnig");
+        }
     }
 }

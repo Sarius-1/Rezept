@@ -134,4 +134,5 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="open_weather_api_key">97f1d2b0cc34bd2116e26d9173aa4df7</string>
 </resources>

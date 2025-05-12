@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.meinkochbuch.core.model.RecipeManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView weatherText;
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RecipeManager.init(getApplicationContext());
+
         setContentView(R.layout.activity_main);
 
         // Toolbar einrichten
@@ -64,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Hier später den Wetter-Text aktualisieren
         updateWeatherInfo();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RecipeManager.getInstance().dispose();
     }
 
     private void updateWeatherInfo() {

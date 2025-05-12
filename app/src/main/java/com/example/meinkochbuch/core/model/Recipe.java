@@ -1,0 +1,108 @@
+package com.example.meinkochbuch.core.model;
+
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.meinkochbuch.io.DatabaseHelper;
+import com.example.meinkochbuch.io.SQLModel;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import lombok.Getter;
+
+@Getter
+public class Recipe {
+
+    // -- Primary key --
+    long id;
+
+    // -- Content --
+    String name;
+    int processingTime, portions, rating;
+    String guideText;
+    List<RecipeIngredient> ingredients = new ArrayList<>();
+
+    public RecipeIngredient getContainingIngredient(Ingredient ingredient){
+        for(RecipeIngredient in : ingredients)if(in.ingredient.equals(ingredient))return in;
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", processingTime=" + processingTime +
+                ", portions=" + portions +
+                ", rating=" + rating +
+                ", guideText='" + guideText + '\'' +
+                ", ingredients=" + ingredients +
+                '}';
+    }
+
+    public static class SQLRecipe extends SQLModel<Recipe>{
+
+        public SQLRecipe(DatabaseHelper database) {
+            super(database);
+        }
+
+        @Override
+        public String buildCreateStatement() {
+            return String.join(DatabaseHelper.CREATION_DELIMITER,
+                    "CREATE TABLE Recipe (",
+                    "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
+                    "Name TEXT NOT NULL,",
+                    "ProcessingTime INTEGER,",
+                    "Portions INTEGER,",
+                    "Description INTEGER,",
+                    "Rating INTEGER)");
+        }
+
+        @Override
+        public void save(Recipe recipe) {
+            DatabaseHelper.DatabaseWriter writer = database.write("Recipe");
+            writer.values.put("Name", recipe.name);
+            writer.values.put("ProcessingTime", recipe.processingTime);
+            writer.values.put("Portions", recipe.portions);
+            writer.values.put("Rating", recipe.rating);
+            writer.values.put("Description", recipe.guideText);
+            recipe.id = writer.closeGetID();
+        }
+
+        @Override
+        public void delete(Recipe modelObj) {
+            SQLiteDatabase db = database.getWritableDatabase();
+            db.execSQL("DELETE FROM Recipe WHERE ID = ?", new Object[]{modelObj.id});
+        }
+
+        @Override
+        public Collection<Recipe> loadAll() {
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Recipe");
+            ArrayList<Recipe> list = new ArrayList<>(reader.cursor.getCount());
+            if (reader.cursor.moveToFirst()) {
+                do {
+                    long id = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("ID"));
+                    String name = reader.cursor.getString(reader.cursor.getColumnIndexOrThrow("Name"));
+                    int processingTime = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("ProcessingTime"));
+                    int portions = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("Portions"));
+                    int rating = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("Rating"));
+                    String description = reader.cursor.getString(reader.cursor.getColumnIndexOrThrow("Description"));
+                    Recipe recipe = new Recipe();
+                    recipe.id = id;
+                    recipe.name = name;
+                    recipe.processingTime = processingTime;
+                    recipe.portions = portions;
+                    recipe.rating = rating;
+                    recipe.guideText = description;
+                    list.add(recipe);
+                } while (reader.cursor.moveToNext());
+            }
+            reader.close();
+            return list;
+        }
+
+    }
+
+}

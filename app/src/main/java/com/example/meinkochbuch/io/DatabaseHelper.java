@@ -1,70 +1,43 @@
 package com.example.meinkochbuch.io;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.meinkochbuch.core.model.RecipeManager;
+import com.example.meinkochbuch.util.OptionalLong;
+
+import java.util.LinkedList;
+import java.util.Optional;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "recipes";
+    public static final String CREATION_DELIMITER = " ";
+    private static final String DATABASE_NAME = "recipes.db";
 
+    private LinkedList<String> initTables = new LinkedList<>();
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
+    public void addTableCreation(String sql){
+        initTables.add(sql);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String delimiter = "\n";
 
-        //Units
-        db.execSQL(String.join(delimiter,
-                "CREATE TABLE Unit (",
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
-                "Name TEXT NOT NULL)"
-        ));
+        Log.i("DatabaseHelper", "Creating Database");
+        for(String init : initTables){
+            db.execSQL(init);
+        }
+        initTables = null;
 
-        //Ingredient
-        db.execSQL(String.join(delimiter,
-                "CREATE TABLE Ingredient (",
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
-                "Name TEXT NOT NULL)"
-        ));
-
-        //Recipe
-        db.execSQL(String.join(delimiter,
-                "CREATE TABLE Recipe (",
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
-                "Name TEXT NOT NULL,",
-                "ProcessingTime INTEGER,",
-                "Portions INTEGER,",
-                "Rating INTEGER)"
-        ));
-
-        //RecipeIngredients
-        db.execSQL(String.join(delimiter,
-                "CREATE TABLE RecipeIngredients (",
-                "IngredientID INTEGER,",
-                "RecipeID INTEGER,",
-                "Amount INTEGER,",
-                "UnitID INTEGER,",
-                "PRIMARY KEY (IngredientID, RecipeID),",
-                "FOREIGN KEY (IngredientID) REFERENCES Ingredient(ID) ON DELETE CASCADE,",
-                "FOREIGN KEY (RecipeID) REFERENCES Recipe(ID) ON DELETE CASCADE,",
-                "FOREIGN KEY (UnitID) REFERENCES Unit(ID))"
-        ));
-
-        //Shopping list
-        db.execSQL(String.join(delimiter,
-                "CREATE TABLE ShoppingList (",
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
-                "IngredientID INTEGER,",
-                "UnitID INTEGER,",
-                "checked BIT DEFAULT 0,",
-                "FOREIGN KEY (IngredientID) REFERENCES Ingredient(ID),",
-                "FOREIGN KEY (UnitID) REFERENCES Unit(ID))"
-        ));
     }
 
     @Override
@@ -73,8 +46,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.setForeignKeyConstraintsEnabled(true);
     }
 
-
-
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.i("Database", "Upgrading DB from v"+oldVersion+" to v"
+                +newVersion+" and dropping everything");
+        db.execSQL("DROP TABLE RecipeIngredient");
+        db.execSQL("DROP TABLE Ingredient");
+        db.execSQL("DROP TABLE Recipe");
+    }
+
+    // -- Database Interaction --
+
+    public DatabaseReader read(String query, String... params){
+        return new DatabaseReader(query, params);
+    }
+
+    public DatabaseWriter write(String tableName){
+        return new DatabaseWriter(tableName);
+    }
+
+
+    public class DatabaseWriter implements AutoCloseable{
+
+        public SQLiteDatabase db;
+        public final ContentValues values = new ContentValues();
+        private final String table;
+
+        private DatabaseWriter(String table){
+            this.table = table;
+            this.db = getWritableDatabase();
+        }
+
+        @Override
+        public void close() {
+            closeGetID();
+        }
+
+        public long closeGetID(){
+            long id = -1;
+            if(!values.isEmpty())id = db.insert(table, null, values);
+            return id;
+        }
+
+    }
+
+    public class DatabaseReader implements AutoCloseable{
+
+        public SQLiteDatabase db;
+        public Cursor cursor;
+        private DatabaseReader(String query, String... params){
+            this.db = getReadableDatabase();
+            this.cursor = db.rawQuery(query,params);
+        }
+
+        @Override
+        public void close() {
+            cursor.close();
+        }
+    }
+
 }

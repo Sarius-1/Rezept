@@ -5,26 +5,14 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/einkaufsliste">
 
+    <activity
+        android:id="@+id/main_activity_destination"
+        android:name="com.example.meinkochbuch.MainActivity" />
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.meinkochbuch.FirstFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.meinkochbuch.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_first"/>
     <fragment
         android:id="@+id/rezept"
         android:name="com.example.meinkochbuch.Rezept"
@@ -39,5 +27,9 @@
         android:id="@+id/einkaufsliste"
         android:name="com.example.meinkochbuch.EinkaufslisteFragment"
         android:label="fragment_einkaufsliste"
-        tools:layout="@layout/fragment_einkaufsliste" />
+        tools:layout="@layout/fragment_einkaufsliste">
+        <action
+            android:id="@+id/action_einkaufslisteToHomeFragment"
+            app:destination="@+id/FirstFragment" />
+    </fragment>
 </navigation>

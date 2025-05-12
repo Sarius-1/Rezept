@@ -2,6 +2,11 @@ package com.example.meinkochbuch;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.meinkochbuch.core.model.RecipeManager;
+import com.example.meinkochbuch.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,66 +25,57 @@ public class MainActivity extends AppCompatActivity {
     private Button shoppingListButton;
     private ImageButton homeButton;
 
+    private AppBarConfiguration appBarConfiguration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RecipeManager.init(getApplicationContext());
-
         setContentView(R.layout.activity_main);
 
-        // Toolbar einrichten
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        // NavController abrufen
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment_content_main);
 
-            // Prüfen, ob ActionBar nicht null ist, bevor wir darauf zugreifen
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayShowTitleEnabled(false); // Titel in der Toolbar ausblenden
-            }
-        } else {
-            Log.e("MainActivity", "Toolbar konnte nicht gefunden werden");
+        if (navHostFragment == null) {
+            throw new IllegalStateException("NavHostFragment not found. Check your layout file.");
         }
 
-        // UI-Elemente initialisieren
-        shoppingListButton = findViewById(R.id.shopping_list_button);
+        NavController navController = navHostFragment.getNavController();
+
+        // Toolbar einrichten (falls vorhanden)
+        Toolbar toolbar = findViewById(R.id.toolbar_include);
+        setSupportActionBar(toolbar);
+
+        // AppBarConfiguration einrichten
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+
+        // Toolbar mit NavController verbinden
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
+        Button shoppingListButton = findViewById(R.id.shopping_list_button);
+        shoppingListButton.setOnClickListener(v -> {
+            navController.navigate(R.id.einkaufsliste);
+        });
+
         homeButton = findViewById(R.id.home_button);
+        homeButton.setOnClickListener(v -> {
+            navController.navigate(R.id.FirstFragment);
+        });
+    }
 
-        // Event-Handler hinzufügen
-        if (shoppingListButton != null) {
-            shoppingListButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Hier Code für den Einkaufslisten-Button einfügen
-                    Toast.makeText(MainActivity.this, "Einkaufsliste geöffnet", Toast.LENGTH_SHORT).show();
-                    // z.B. startActivity(new Intent(MainActivity.this, ShoppingListActivity.class));
-                }
-            });
-        }
-
-        if (homeButton != null) {
-            homeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Hier Code für den Home-Button einfügen
-                    Toast.makeText(MainActivity.this, "Home Button gedrückt", Toast.LENGTH_SHORT).show();
-                    // z.B. Navigation zur Startseite oder App neu laden
-                }
-            });
-        }
-
-        // Hier später den Wetter-Text aktualisieren
-        updateWeatherInfo();
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RecipeManager.getInstance().dispose();
     }
 
     private void updateWeatherInfo() {
-        // In einer echten App würdest du hier eine Wetter-API abfragen
-        // Dies ist nur ein Beispiel
+        // In a real app, you would fetch data from a weather API
+        // This is just a mock update for demonstration
         if (weatherText != null) {
             weatherText.setText("21°C Sonnig");
         }

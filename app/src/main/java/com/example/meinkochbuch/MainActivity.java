@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RecipeManager.getInstance().dispose();
     }
 
     private boolean checkPermission() {

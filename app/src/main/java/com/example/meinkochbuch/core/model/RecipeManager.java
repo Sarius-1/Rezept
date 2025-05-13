@@ -18,7 +18,7 @@ import java.util.Map;
 import lombok.Getter;
 
 /**
- * Main class behind for the hole recipe-model. It manages the SQLite-Database connection behind objects like:
+ * Main class for the hole recipe-model. It manages the SQLite-Database connection behind objects like:
  * <l>
  *     <li>{@link Recipe}</li>
  *     <li>{@link Ingredient}</li>
@@ -26,7 +26,10 @@ import lombok.Getter;
  *     <li>{@link ShoppingListItem}</li>
  *     <li>(as well as {@link Unit})</li>
  * </l>
- * and holds the instance of the
+ * and holds the instance of the {@link DatabaseHelper}.
+ * <p>
+ * All use cases regarding recipe, ingredients, etc. are managed inside this class and shouldn't be manually changed outside.
+ * </p>
  */
 public class RecipeManager {
 
@@ -35,6 +38,11 @@ public class RecipeManager {
     @Getter
     private static RecipeManager instance;
 
+    /**
+     * Creates the first instance of this recipe manager which furthermore creates the database.
+     * This should be called once on app start.
+     * @param context The app context needed for the database.
+     */
     public static void init(Context context){
         if(instance != null)return;
         instance = new RecipeManager(context);
@@ -80,6 +88,9 @@ public class RecipeManager {
 
     }
 
+    /**
+     * Loads all model objects from the database into memory.
+     */
     private void load(){
         Log.i(TAG, "Loading everything from database...");
         Collection<Ingredient> ingredients = sqlIngredient.loadAll();

@@ -10,9 +10,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+/**
+ * The recipe is the main model which contains all necessary attributes to provide graphical information
+ */
 @Getter
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class Recipe {
 
     // -- Primary key --

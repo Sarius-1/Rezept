@@ -8,9 +8,12 @@ import com.example.meinkochbuch.io.SQLModel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class ShoppingListItem {
 
     long id;

@@ -9,41 +9,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Wetteranzeige -->
-        <TextView
-            android:id="@+id/weather_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wetter"
-            android:background="#DDDDDD"
-            android:padding="8dp"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!-- Einkaufsliste Button -->
-        <Button
-            android:id="@+id/button_einkaufsliste"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Einkaufsliste"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/weather_info"
-            app:layout_constraintEnd_toStartOf="@id/menu_button"
-            app:layout_constraintHorizontal_bias="0.5" />
-
-        <!-- Hamburger Menü -->
-        <ImageButton
-            android:id="@+id/menu_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_more"
-            android:contentDescription="Menü"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <!-- Bild -->
         <ImageView
             android:id="@+id/recipe_image"
@@ -51,7 +16,7 @@
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:background="#CCCCCC"
-            app:layout_constraintTop_toBottomOf="@id/button_einkaufsliste"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

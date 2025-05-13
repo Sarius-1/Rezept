@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class RecipeManager {
      * This should be called once on app start.
      * @param context The app context needed for the database.
      */
-    public static void init(Context context){
+    public static void init(@NotNull Context context){
         if(instance != null)return;
         instance = new RecipeManager(context);
         instance.load();
@@ -119,8 +120,12 @@ public class RecipeManager {
         Log.i(TAG, "ShoppingListItems: "+ITEM_BY_ID.size());
     }
 
+    /**
+     * Disposes this manager and closes the database.
+     */
     public void dispose(){
         database.close();
+        instance = null;
     }
 
     final Map<String, Ingredient> INGREDIENTS_BY_LOWERCASE_NAME = new HashMap<>();
@@ -128,22 +133,50 @@ public class RecipeManager {
     final Map<Long, ShoppingListItem> ITEM_BY_ID = new HashMap<>();
 
     // -- Ingredients --
-    public boolean isIngredientRegistered(String name){
+
+    /**
+     * Checks whether an ingredients name is already registered.
+     * @param name The name to check for.
+     * @return {@code true} if it is already registered, {@link false} otherwise.
+     */
+    public boolean isIngredientRegistered(@NotNull String name){
         if(Verify.isInvalidText(name))return false;
         return INGREDIENTS_BY_LOWERCASE_NAME.containsKey(name.trim().toLowerCase());
     }
 
-    public Ingredient getIngredientByName(String name){
+    /**
+     * Tries to get an ingredient by a specified name. The ingredient must be loaded/registered beforehand.
+     * Otherwise it will return {@code null}.
+     * @param name The name of the ingredient.
+     * @return The ingredient registered by the name or {@code null} if there is non.
+     */
+    public Ingredient getIngredientByName(@NotNull String name){
         if(Verify.isInvalidText(name))return null;
         return INGREDIENTS_BY_LOWERCASE_NAME.get(name.trim().toLowerCase());
     }
 
+    /**
+     * Tries to get an ingredient by a specified id.
+     * The ingredient must be loaded/registered beforehand, otherwise it will return {@code null}.
+     * @param id The id of the ingredient.
+     * @return The ingredient registered with that id or {@code null} if there is non.
+     */
     public Ingredient getIngredientByID(long id){
         for(Ingredient ingredient : INGREDIENTS_BY_LOWERCASE_NAME.values())if(ingredient.id == id)return ingredient;
         return null;
     }
 
-    public Ingredient tryRegisterIngredient(String name){
+    /**
+     * Tries to register an ingredient with a specified name. If an ingredient with that name is already registered
+     * (ignoring prefix/suffix whitespaces and case sensitivity), the already registered one will be returned.
+     * Otherwise a new object will be created and saved into the database.
+     * If the name is invalid just {@code null} will be returned.
+     * <p>For more information see {@link Verify#isInvalidText(String)}.</p>
+     * @param name The name of the ingredient to register.
+     * @return The newly registered ingredient (if it isn't already, otherwise the registered one is returned) or
+     * {@code null} if the name is invalid.
+     */
+    public Ingredient tryRegisterIngredient(@NotNull String name){
         if(Verify.isInvalidText(name))return null;
         String search = name.trim().toLowerCase();
         Ingredient ingredient = INGREDIENTS_BY_LOWERCASE_NAME.getOrDefault(search, null);
@@ -157,9 +190,21 @@ public class RecipeManager {
         return ingredient;
     }
 
+    /**
+     * Deletes an ingredient from the database and local memory.
+     * This will result in all recipes will have all {@link RecipeIngredient} removed that hold the specified ingredient,
+     * as well as all {@link ShoppingListItem} that also hold that ingredient.
+     * @param ingredient The ingredient to delete.
+     */
     public void deleteIngredient(Ingredient ingredient){
-        if(ingredient == null)return;
-        if(!isIngredientRegistered(ingredient.name))return;
+        if(ingredient == null){
+            Log.e(TAG, "Tried to delete ingredient but it is null!");
+            return;
+        }
+        if(!isIngredientRegistered(ingredient.name)){
+            Log.e(TAG, "Tried to delete ingredient "+ingredient+" but it isn't registered!");
+            return;
+        }
         Log.i(TAG, "Deleting ingredient '"+ingredient.name+"' (ID: "+ingredient.id+")...");
         sqlIngredient.delete(ingredient);
         INGREDIENTS_BY_LOWERCASE_NAME.remove(ingredient.name.trim().toLowerCase());
@@ -175,13 +220,33 @@ public class RecipeManager {
         Log.i(TAG, "Ingredient (ID: "+ingredient.id+") deleted!");
     }
 
-    public void deleteIngredient(String name){
+    /**
+     * Deletes and ingredient by name.
+     * For more information see {@link #deleteIngredient(Ingredient)}.
+     * @param name The name of the ingredient to delete.
+     */
+    public void deleteIngredient(@NotNull String name){
         deleteIngredient(getIngredientByName(name));
     }
 
     // -- RecipeIngredient --
 
+    /**
+     * Adds an ingredient to a given recipe.
+     * @param recipe The recipe to add an ingredient to.
+     * @param ingredient The ingredient to add.
+     * @param amount The amount used for displaying in combination with the unit.
+     * @param unit The unit used for displaying in combiantion with the amount.
+     */
     public void addIngredient(@NotNull Recipe recipe, @NotNull Ingredient ingredient, int amount, Unit unit){
+        if(getRecipeByID(recipe.id) == null){
+            Log.e(TAG, "Tried to add an ingredient to "+recipe+" but the recipe isn't registered!");
+            return; //recipe is not registered
+        }
+        if(getIngredientByName(ingredient.name) == null){
+            Log.e(TAG, "Tried to add ingredient "+ingredient+" to "+recipe+" but the ingredient isn't registered!");
+            return;
+        }
         Log.i(TAG, "Adding ingredient '"+ingredient.name+"'...");
         RecipeIngredient ri = new RecipeIngredient();
         ri.recipe = recipe;
@@ -193,7 +258,20 @@ public class RecipeManager {
         Log.i(TAG, "Registered recipe ingredient '"+ingredient.name+"' "+amount+" "+unit);
     }
 
-    public void removeIngredient(Recipe recipe, RecipeIngredient ingredient){
+    /**
+     * Removes an ingredient from a given recipe.
+     * @param recipe The recipe to remove from.
+     * @param ingredient The ingredient to remove.
+     */
+    public void removeIngredient(@NotNull Recipe recipe, @NotNull RecipeIngredient ingredient){
+        if(getRecipeByID(recipe.id) == null){
+            Log.e(TAG, "Tried to remove ingredient from recipe "+recipe+" but the recipe isn't registered!");
+            return;
+        }
+        if(!recipe.ingredients.contains(ingredient) || !ingredient.recipe.equals(recipe)){
+            Log.w(TAG, "Tried to remove ingredient from recipe "+recipe+" but it doesn't have that ingredient!");
+            return;
+        }
         Log.i(TAG, "Removing ingredient "+ingredient.ingredient.name+" (ID: "+ingredient.ingredient.id+" from recipe '"+
                 recipe.name+"' (ID: "+recipe.id+")...");
         LinkedList<RecipeIngredient> toRemove = new LinkedList<>();
@@ -209,11 +287,23 @@ public class RecipeManager {
 
     // -- Recipe --
 
+    /**
+     * Retrieves a recipe by a given id.
+     * @param id The id to receive the recipe for.
+     * @return The registered recipe or {@code null} if there is non for this id.
+     */
     public Recipe getRecipeByID(long id){
         return RECIPE_BY_ID.get(id);
     }
 
+    /**
+     * Collects all recipes by a given name and returns the created set.
+     * @param name The name of the recipes to get.
+     * @param ignoreCase Whether to ignore case sensitivity.
+     * @return A collection of all recipes that have the equal name (or similar if {@code ignoreCase} is {@code true}).
+     */
     public Collection<Recipe> getRecipesByName(@NotNull String name, boolean ignoreCase){
+        if(RECIPE_BY_ID.isEmpty())return Collections.emptyList();
         ArrayList<Recipe> list = new ArrayList<>(2);
         for(Recipe recipe : RECIPE_BY_ID.values()){
             if(ignoreCase && name.equalsIgnoreCase(recipe.name))list.add(recipe);
@@ -225,6 +315,16 @@ public class RecipeManager {
         return getRecipesByName(name, false);
     }
 
+    /**
+     * Creates a new recipe with a given name and following parameters. This will then registered in the database and app cache
+     * and finally returned.
+     * @param name The name of the recipe.
+     * @param processingTime The processing time.
+     * @param portions The portions.
+     * @param rating The rating.
+     * @param text The description (can be {@code null}).
+     * @return The newly created recipe.
+     */
     public Recipe createRecipe(@NotNull String name, int processingTime, int portions, int rating, String text){
         Log.i(TAG, "Creating recipe '"+name+"'...");
         Recipe recipe = new Recipe();
@@ -241,10 +341,20 @@ public class RecipeManager {
 
     // -- ShoppingList --
 
+    /**
+     * Retrieves all items stored in the local cache of the shopping list.
+     * <p><b>Note:</b> this is a copy of the internal cache!</p>
+     * @return The
+     */
     public Collection<ShoppingListItem> getShoppingList(){
-        return ITEM_BY_ID.values();
+        return new ArrayList<>(ITEM_BY_ID.values());
     }
 
+    /**
+     * Adds an item to the shopping list.
+     * @param ingredient The ingredient to add.
+     * @param unit The unit for the ingredient.
+     */
     public void addShoppingListItem(@NotNull Ingredient ingredient, Unit unit){
         Log.i(TAG, "Adding shopping list item ("+ingredient+", "+unit+")...");
         ShoppingListItem item = new ShoppingListItem();
@@ -254,15 +364,32 @@ public class RecipeManager {
         ITEM_BY_ID.put(item.id, item);
         Log.i(TAG, "Item added! (ID: "+item.id+")");
     }
+
+    /**
+     * Removes an item from the shopping list.
+     * @param item The item to remove.
+     */
     public void removeShoppingListItem(@NotNull ShoppingListItem item){
-        if(!ITEM_BY_ID.containsKey(item.id))return;
+        if(!ITEM_BY_ID.containsKey(item.id)){
+            Log.e(TAG, "Tried to remove shopping list item "+item+" but it isn't registered.");
+            return;
+        }
         Log.i(TAG,"Removing shopping list item "+item+"...");
         ITEM_BY_ID.remove(item.id);
         sqlShoppingListItem.delete(item);
         Log.i(TAG, "Item was removed!");
     }
+
+    /**
+     * Sets an item in the shopping list to either checked or not.
+     * @param item The item to set the checked-state for.
+     * @param checked Whether it is now checked or not.
+     */
     public void setShoppingListItemChecked(@NotNull ShoppingListItem item, boolean checked){
-        if(!ITEM_BY_ID.containsKey(item.id))return;
+        if(!ITEM_BY_ID.containsKey(item.id)){
+            Log.e(TAG, "Tried to change the checked status for "+item+" but it isn't registered!");
+            return;
+        }
         if(item.checked == checked)return;
         String state = (checked ? "" : "not ")+"checked";
         Log.i(TAG, "Making item "+item+" "+state+"...");

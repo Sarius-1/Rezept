@@ -42,6 +42,8 @@ public class Recipe {
                 '}';
     }
 
+
+
     public static class SQLRecipe extends SQLModel<Recipe>{
 
         public SQLRecipe(DatabaseHelper database) {

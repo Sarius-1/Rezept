@@ -17,6 +17,17 @@ import java.util.Map;
 
 import lombok.Getter;
 
+/**
+ * Main class behind for the hole recipe-model. It manages the SQLite-Database connection behind objects like:
+ * <l>
+ *     <li>{@link Recipe}</li>
+ *     <li>{@link Ingredient}</li>
+ *     <li>{@link RecipeIngredient}</li>
+ *     <li>{@link ShoppingListItem}</li>
+ *     <li>(as well as {@link Unit})</li>
+ * </l>
+ * and holds the instance of the
+ */
 public class RecipeManager {
 
     private static final String TAG = "RecipeManager";

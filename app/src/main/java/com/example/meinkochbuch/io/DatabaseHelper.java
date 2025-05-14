@@ -50,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("Database", "Upgrading DB from v"+oldVersion+" to v"
                 +newVersion+" and dropping everything");
+        db.execSQL("DROP TABLE ShoppingList");
         db.execSQL("DROP TABLE RecipeIngredient");
         db.execSQL("DROP TABLE Ingredient");
         db.execSQL("DROP TABLE Recipe");

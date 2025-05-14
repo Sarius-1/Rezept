@@ -1,13 +1,11 @@
 package com.example.meinkochbuch.core.model;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.Nullable;
 
 import com.example.meinkochbuch.io.DatabaseHelper;
 import com.example.meinkochbuch.io.SQLModel;
-import com.example.meinkochbuch.util.Verify;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +14,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Main component behind the recipes. Unique text describes the ingredient itself.
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class Ingredient {
@@ -38,9 +39,9 @@ public class Ingredient {
                 '}';
     }
 
-    public static class SQLIngredient extends SQLModel<Ingredient> {
+    static class SQLIngredient extends SQLModel<Ingredient> {
 
-        public SQLIngredient(DatabaseHelper database) {
+        SQLIngredient(DatabaseHelper database) {
             super(database);
         }
 

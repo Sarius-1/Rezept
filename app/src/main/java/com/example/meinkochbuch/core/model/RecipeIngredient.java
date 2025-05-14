@@ -13,6 +13,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Combines an {@link Ingredient} and the necessary amount as well as the {@link Unit} to create an
+ * ingredient part in the recipe.
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class RecipeIngredient {
@@ -32,8 +36,8 @@ public class RecipeIngredient {
                 '}';
     }
 
-    public static class SQLRecipeIngredient extends SQLModel<RecipeIngredient> {
-        public SQLRecipeIngredient(DatabaseHelper database) {
+    static class SQLRecipeIngredient extends SQLModel<RecipeIngredient> {
+        SQLRecipeIngredient(DatabaseHelper database) {
             super(database);
         }
 

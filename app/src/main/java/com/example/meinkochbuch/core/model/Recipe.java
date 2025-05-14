@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * The recipe is the main model which contains all necessary attributes to provide graphical information
+ * The recipe is the main model which contains all necessary attributes to provide graphical information.
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -50,9 +50,9 @@ public class Recipe {
 
 
 
-    public static class SQLRecipe extends SQLModel<Recipe>{
+    static class SQLRecipe extends SQLModel<Recipe>{
 
-        public SQLRecipe(DatabaseHelper database) {
+        SQLRecipe(DatabaseHelper database) {
             super(database);
         }
 

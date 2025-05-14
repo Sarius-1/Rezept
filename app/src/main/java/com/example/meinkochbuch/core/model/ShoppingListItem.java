@@ -12,6 +12,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents the model for an item in the shopping list.
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class ShoppingListItem {
@@ -31,8 +34,8 @@ public class ShoppingListItem {
                 '}';
     }
 
-    public static class SQLShoppingListItem extends SQLModel<ShoppingListItem> {
-        public SQLShoppingListItem(DatabaseHelper database) {
+    static class SQLShoppingListItem extends SQLModel<ShoppingListItem> {
+        SQLShoppingListItem(DatabaseHelper database) {
             super(database);
         }
 

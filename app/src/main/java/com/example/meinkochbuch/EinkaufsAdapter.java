@@ -8,17 +8,22 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import java.util.List;
+import com.example.meinkochbuch.core.model.ShoppingListItem;
 
-public class EinkaufsAdapter extends ArrayAdapter<EinkaufsItem> {
+import java.util.Collection;
+import java.util.LinkedList;
 
-    public EinkaufsAdapter(Context context, List<EinkaufsItem> items) {
-        super(context, 0, items);
+public class EinkaufsAdapter extends ArrayAdapter<ShoppingListItem> {
+
+    private LinkedList<ShoppingListItem> selectedItems;
+    public EinkaufsAdapter(Context context, Collection<ShoppingListItem> items, LinkedList<ShoppingListItem> selectedItem) {
+        super(context, 0, items.size());
+        this.selectedItems = selectedItem;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        EinkaufsItem item = getItem(position);
+        ShoppingListItem item = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
@@ -29,12 +34,18 @@ public class EinkaufsAdapter extends ArrayAdapter<EinkaufsItem> {
         TextView nameView = convertView.findViewById(R.id.item_name);
         CheckBox checkBox = convertView.findViewById(R.id.item_checkbox);
 
-        mengeView.setText(String.valueOf(item.getMenge()));
-        nameView.setText(item.getName());
-        checkBox.setChecked(item.isAusgewaehlt());
+        mengeView.setText(String.valueOf(item.getUnit()));
+        nameView.setText(item.getIngredient().getName());
+        checkBox.setChecked(selectedItems.contains(item));
 
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) ->
-                item.setAusgewaehlt(isChecked));
+        {
+            if (isChecked) {
+                selectedItems.add(item);
+            } else {
+                selectedItems.remove(item);
+            }
+        });
 
         return convertView;
     }

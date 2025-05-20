@@ -9,14 +9,21 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.meinkochbuch.core.model.RecipeManager;
+import com.example.meinkochbuch.core.model.ShoppingListItem;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class EinkaufslisteFragment extends Fragment {
 
-    private List<EinkaufsItem> einkaufsliste;
+    private Collection<ShoppingListItem> einkaufsliste;
     private EinkaufsAdapter adapter;
+
+    private LinkedList<ShoppingListItem> selectedItems = new LinkedList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,20 +33,16 @@ public class EinkaufslisteFragment extends Fragment {
         ListView listView = view.findViewById(R.id.list_einkaufsliste);
         Button deleteButton = view.findViewById(R.id.button_delete_selected);
 
-        einkaufsliste = new ArrayList<>();
-        einkaufsliste.add(new EinkaufsItem("Milch", 2));
-        einkaufsliste.add(new EinkaufsItem("Eier", 10));
-        einkaufsliste.add(new EinkaufsItem("Brot", 1));
 
-        adapter = new EinkaufsAdapter(getContext(), einkaufsliste);
+        einkaufsliste = new ArrayList<>();
+        einkaufsliste = RecipeManager.getInstance().getShoppingList();
+
+        adapter = new EinkaufsAdapter(getContext(), einkaufsliste, selectedItems);
         listView.setAdapter(adapter);
 
         deleteButton.setOnClickListener(v -> {
-            Iterator<EinkaufsItem> iterator = einkaufsliste.iterator();
-            while (iterator.hasNext()) {
-                if (iterator.next().isAusgewaehlt()) {
-                    iterator.remove();
-                }
+            for (ShoppingListItem item:einkaufsliste) {
+
             }
             adapter.notifyDataSetChanged();
         });

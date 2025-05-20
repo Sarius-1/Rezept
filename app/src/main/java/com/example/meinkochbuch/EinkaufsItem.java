@@ -1,8 +1,11 @@
 package com.example.meinkochbuch;
 
+import lombok.Setter;
+
 public class EinkaufsItem {
     private String name;
     private int menge;
+    @Setter
     private boolean ausgewaehlt;
 
     public EinkaufsItem(String name, int menge) {
@@ -23,8 +26,5 @@ public class EinkaufsItem {
         return ausgewaehlt;
     }
 
-    public void setAusgewaehlt(boolean ausgewaehlt) {
-        this.ausgewaehlt = ausgewaehlt;
-    }
 }
 

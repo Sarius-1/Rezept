@@ -357,10 +357,18 @@ public class RecipeManager {
      * @param ingredient The ingredient to add.
      * @param unit The unit for the ingredient.
      */
-    public void addShoppingListItem(@NotNull Ingredient ingredient, Unit unit){
+    public void addShoppingListItem(@NotNull Ingredient ingredient, int amount, Unit unit){
         Log.i(TAG, "Adding shopping list item ("+ingredient+", "+unit+")...");
+        for(ShoppingListItem item : getShoppingList()){
+            if(item.ingredient == ingredient && item.unit == unit){
+                //if item already exists, just set its amount.
+                setShoppingListItemAmount(item, amount);
+                return;
+            }
+        }
         ShoppingListItem item = new ShoppingListItem();
         item.ingredient = ingredient;
+        item.amount = amount;
         item.unit = unit;
         sqlShoppingListItem.save(item);
         ITEM_BY_ID.put(item.id, item);
@@ -396,7 +404,25 @@ public class RecipeManager {
         String state = (checked ? "" : "not ")+"checked";
         Log.i(TAG, "Making item "+item+" "+state+"...");
         sqlShoppingListItem.setChecked(item, checked);
+        item.checked = checked;
         Log.i(TAG, "Item is now "+state+"!");
+    }
+
+    /**
+     * Sets the amount of a specified shopping list item.
+     * @param item The item to set the amount for.
+     * @param amount The amount to set.
+     */
+    public void setShoppingListItemAmount(@NotNull ShoppingListItem item, int amount){
+        if(amount <= 0){
+            if(ITEM_BY_ID.containsKey(item.id))removeShoppingListItem(item);
+            return;
+        }
+        if(item.amount == amount)return;
+        Log.i(TAG, "Setting item (ID:"+item.id+") amount to "+amount+"...");
+        sqlShoppingListItem.setAmount(item, amount);
+        item.amount = amount;
+        Log.i(TAG, "Item (ID:"+item.id+") amount was changed to "+amount+"!");
     }
 
     // -- Filter --

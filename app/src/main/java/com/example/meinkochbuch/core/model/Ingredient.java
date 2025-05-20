@@ -2,6 +2,7 @@ package com.example.meinkochbuch.core.model;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.meinkochbuch.io.DatabaseHelper;
@@ -31,6 +32,7 @@ public class Ingredient {
         return id == ingredient.id && name.equals(ingredient.name);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Ingredient{" +
@@ -69,7 +71,7 @@ public class Ingredient {
 
         @Override
         public Collection<Ingredient> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Ingredient");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Ingredient ORDER BY ID ASC");
             ArrayList<Ingredient> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

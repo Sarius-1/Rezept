@@ -2,10 +2,13 @@ package com.example.meinkochbuch.core.model;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
+
 import com.example.meinkochbuch.io.DatabaseHelper;
 import com.example.meinkochbuch.io.SQLModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +38,23 @@ public class Recipe {
         return null;
     }
 
+    public boolean containsIngredients(Ingredient... ingredients){
+        return containsIngredients(Arrays.asList(ingredients));
+    }
+
+    public boolean containsIngredients(Collection<Ingredient> ingredients){
+        int count = 0;
+        for(Ingredient criteria : ingredients){
+            if(criteria == null){
+                count++;
+                continue;
+            }
+            for(RecipeIngredient ingredient : this.ingredients)if(ingredient.ingredient.equals(criteria))count++;
+        }
+        return count == ingredients.size();
+    }
+
+    @NonNull
     @Override
     public String toString() {
         return "Recipe{" +
@@ -87,7 +107,7 @@ public class Recipe {
 
         @Override
         public Collection<Recipe> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Recipe");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Recipe ORDER BY ID ASC");
             ArrayList<Recipe> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

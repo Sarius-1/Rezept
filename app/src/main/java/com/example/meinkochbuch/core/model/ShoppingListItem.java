@@ -75,7 +75,7 @@ public class ShoppingListItem {
 
         @Override
         public Collection<ShoppingListItem> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM ShoppingList");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM ShoppingList ORDER BY ID ASC");
             ArrayList<ShoppingListItem> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

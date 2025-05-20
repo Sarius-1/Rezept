@@ -1,9 +1,9 @@
 package com.example.meinkochbuch.core.model;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.meinkochbuch.filter.FilterCriteria;
 import com.example.meinkochbuch.io.DatabaseHelper;
 import com.example.meinkochbuch.util.Verify;
 
@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.Getter;
 
@@ -395,6 +397,25 @@ public class RecipeManager {
         Log.i(TAG, "Making item "+item+" "+state+"...");
         sqlShoppingListItem.setChecked(item, checked);
         Log.i(TAG, "Item is now "+state+"!");
+    }
+
+    // -- Filter --
+
+    /**
+     * Function that filters all registered recipes by given filter criteria. For more information see {@link FilterCriteria}.
+     * @param filters The filters to apply.
+     * @return The collected recipes fitting the filters.
+     */
+    public Set<Recipe> filter(FilterCriteria... filters){
+        if(filters == null || filters.length == 0)return Collections.emptySet();
+        HashSet<Recipe> set = new HashSet<>();
+        for(Recipe recipe : RECIPE_BY_ID.values()){
+            for(FilterCriteria criteria : filters){
+                if(criteria == null)continue;
+                if(criteria.accept(recipe))set.add(recipe);
+            }
+        }
+        return set;
     }
 
 }

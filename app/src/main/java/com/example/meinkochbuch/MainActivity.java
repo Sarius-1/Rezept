@@ -42,6 +42,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -56,8 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),this::processRequestPermissionResult);
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private final long UPDATE_INTERVAL = 5 * 60 * 1000;
+    private final long UPDATE_INTERVAL = TimeUnit.MINUTES.toMillis(5);
 
 
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        handler.post(weatherUpdateRunnable);
+        initWeatherCycle();
 
     }
 
@@ -123,33 +123,26 @@ public class MainActivity extends AppCompatActivity {
         return checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private final Runnable weatherUpdateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (checkPermission()) {
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
+    private void initWeatherCycle(){
+        if (checkPermission()) {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UPDATE_INTERVAL, 0,
+                    location -> {
                         Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                         try {
-                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            List<Address> addresses = geocoder.getFromLocation(
+                                    location.getLatitude(), location.getLongitude(), 1);
                             if (addresses != null && !addresses.isEmpty()) {
                                 city = addresses.get(0).getLocality();
                                 Log.d("MainActivity", "City: " + city);
                                 new Thread(MainActivity.this::updateWeatherInfo).start();
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.w("Weather", "An exception was thrown while building weather service", e);
                         }
-                    }
-                }, null);
-            }
-
-            // Zeitgesteuertes Wiederholen nach 5 Minuten
-            handler.postDelayed(this, UPDATE_INTERVAL);
+                    });
         }
-    };
+    }
 
     private void updateWeatherInfo() {
         String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+getString(R.string.open_weather_api_key);

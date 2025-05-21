@@ -66,6 +66,7 @@ public class RecipeManager {
         this.sqlShoppingListItem = new ShoppingListItem.SQLShoppingListItem(database);
     }
 
+    @Deprecated
     private void test(){
         Log.d(TAG, "Start of test");
         if(RECIPE_BY_ID.isEmpty()){

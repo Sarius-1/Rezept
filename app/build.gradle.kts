@@ -3,14 +3,16 @@ plugins {
     alias(libs.plugins.safeargs)
 }
 
+var sdk = 34
+
 android {
     namespace = "com.example.meinkochbuch"
-    compileSdk = 35
+    compileSdk = sdk
 
     defaultConfig {
         applicationId = "com.example.meinkochbuch"
-        minSdk = 35
-        targetSdk = 35
+        minSdk = sdk
+        targetSdk = sdk
         versionCode = 1
         versionName = "1.0"
 

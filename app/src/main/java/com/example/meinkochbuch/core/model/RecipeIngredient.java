@@ -2,6 +2,8 @@ package com.example.meinkochbuch.core.model;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
+
 import com.example.meinkochbuch.io.DatabaseHelper;
 import com.example.meinkochbuch.io.SQLModel;
 
@@ -26,6 +28,7 @@ public class RecipeIngredient {
     int amount;
     Unit unit;
 
+    @NonNull
     @Override
     public String toString() {
         return "RecipeIngredient{" +

@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,6 +34,7 @@ public class Recipe {
     int processingTime, portions, rating;
     String guideText;
     List<RecipeIngredient> ingredients = new ArrayList<>();
+    Set<RecipeCategory> categories = new HashSet<>();
 
     public RecipeIngredient getContainingIngredient(Ingredient ingredient){
         for(RecipeIngredient in : ingredients)if(in.ingredient.equals(ingredient))return in;
@@ -52,6 +55,19 @@ public class Recipe {
             for(RecipeIngredient ingredient : this.ingredients)if(ingredient.ingredient.equals(criteria))count++;
         }
         return count == ingredients.size();
+    }
+
+    public boolean isCategorizedAs(Category... categories){
+        if(categories == null || categories.length == 0)return false;
+        int count = 0;
+        for(Category category : categories){
+            if(category == null){
+                count++;
+                continue;
+            }
+            for(RecipeCategory rc : this.categories)if(rc.category.equals(category))count++;
+        }
+        return count == categories.length;
     }
 
     @NonNull

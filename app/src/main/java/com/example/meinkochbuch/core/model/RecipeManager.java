@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +57,7 @@ public class RecipeManager {
     private final Recipe.SQLRecipe sqlRecipe;
     private final Ingredient.SQLIngredient sqlIngredient;
     private final RecipeIngredient.SQLRecipeIngredient sqlRecipeIngredient;
+    private final RecipeCategory.SQLRecipeCategory sqlRecipeCategory;
     private final ShoppingListItem.SQLShoppingListItem sqlShoppingListItem;
     private final DatabaseHelper database;
     private RecipeManager(Context context){
@@ -63,6 +65,7 @@ public class RecipeManager {
         this.sqlRecipe = new Recipe.SQLRecipe(database);
         this.sqlIngredient = new Ingredient.SQLIngredient(database);
         this.sqlRecipeIngredient = new RecipeIngredient.SQLRecipeIngredient(database);
+        this.sqlRecipeCategory = new RecipeCategory.SQLRecipeCategory(database);
         this.sqlShoppingListItem = new ShoppingListItem.SQLShoppingListItem(database);
     }
 
@@ -109,7 +112,12 @@ public class RecipeManager {
 
         Collection<RecipeIngredient> recipeIngredients = sqlRecipeIngredient.loadAll();
         for(RecipeIngredient ingredient : recipeIngredients){
-            ingredient.recipe.ingredients.add(ingredient);
+            ingredient.recipe.ingredients.add(ingredient); //add self to recipe
+        }
+
+        Collection<RecipeCategory> recipeCategories = sqlRecipeCategory.loadAll();
+        for(RecipeCategory category : recipeCategories){
+            category.recipe.categories.add(category); //add self to recipe
         }
 
         Collection<ShoppingListItem> items = sqlShoppingListItem.loadAll();
@@ -340,6 +348,43 @@ public class RecipeManager {
         RECIPE_BY_ID.put(recipe.id, recipe); //then put into map!
         Log.i(TAG, "Recipe (ID: "+recipe.id+") created!");
         return recipe;
+    }
+
+    // -- Categories --
+
+    /**
+     * Adds a category to a recipe. This will do nothing if it was already added.
+     * @param recipe The recipe to add the given category to.
+     * @param category The given category to add.
+     */
+    public void addCategory(@NotNull Recipe recipe, @NotNull Category category){
+        if(recipe.isCategorizedAs(category))return;
+        Log.i(TAG, "Adding category "+category+" to Recipe (ID:"+recipe.id+")...");
+        RecipeCategory rc = new RecipeCategory();
+        rc.recipe = recipe;
+        rc.category = category;
+        sqlRecipeCategory.save(rc);
+        recipe.categories.add(rc);
+        Log.i(TAG, "Added category to the recipe!");
+    }
+
+    /**
+     * Removes a category from a recipe. This will do nothing if it doesn't have the specified category.
+     * @param recipe The recipe to remove the given category from.
+     * @param category The given category to remove.
+     */
+    public void removeCategory(@NotNull Recipe recipe, @NotNull Category category){
+        if(!recipe.isCategorizedAs(category))return;
+        Log.i(TAG, "Removing category "+category+" from Recipe (ID:"+recipe.id+")...");
+        Iterator<RecipeCategory> itr = recipe.categories.iterator();
+        while (itr.hasNext()){
+            RecipeCategory rc = itr.next();
+            if(rc.category == category)continue;
+            sqlRecipeCategory.delete(rc);
+            itr.remove();
+            Log.i(TAG, "Removed category from the recipe!");
+            break;
+        }
     }
 
     // -- ShoppingList --

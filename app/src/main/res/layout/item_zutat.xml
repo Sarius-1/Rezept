@@ -12,18 +12,18 @@
 
         <EditText
             android:id="@+id/et_menge"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="12dp"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="Menge" />
+            android:layout_weight="1"
+            android:hint="Menge"
+            android:inputType="numberDecimal" />
 
-        <EditText
-            android:id="@+id/et_einheit"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Spinner
+            android:id="@+id/spinner_einheit"
+            android:layout_width="81dp"
             android:layout_height="wrap_content"
-            android:hint="Einheit" />
+            android:layout_weight="1"
+            android:spinnerMode="dropdown" />
 
         <EditText
             android:id="@+id/et_zutat"
@@ -41,5 +41,4 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_marginStart="8dp" />
     </LinearLayout>
-
 </FrameLayout>

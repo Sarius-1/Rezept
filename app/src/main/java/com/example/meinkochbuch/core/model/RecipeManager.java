@@ -392,7 +392,7 @@ public class RecipeManager {
     /**
      * Retrieves all items stored in the local cache of the shopping list.
      * <p><b>Note:</b> this is a copy of the internal cache!</p>
-     * @return The
+     * @return The list of items representing the shopping list.
      */
     public Collection<ShoppingListItem> getShoppingList(){
         return new ArrayList<>(ITEM_BY_ID.values());

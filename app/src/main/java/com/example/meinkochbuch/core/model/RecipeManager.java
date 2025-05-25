@@ -350,6 +350,11 @@ public class RecipeManager {
         return recipe;
     }
 
+    /**
+     * Deletes a recipe. The recipe must be registered.
+     * @param recipe The recipe to delete.
+     * @return Whether the deletion was successful.
+     */
     public boolean deleteRecipe(@NotNull Recipe recipe){
         if(!RECIPE_BY_ID.containsKey(recipe.id)){
             Log.w(TAG, "Tried to remove recipe "+recipe+" but it is not registered!");
@@ -362,6 +367,12 @@ public class RecipeManager {
         Log.i(TAG, "Recipe deleted!");
         return true;
     }
+
+    /**
+     * Deletes a recipe by id.
+     * @param id The id of the recipe.
+     * @return Whether the deletion was successful.
+     */
     public boolean deleteRecipe(int id){
         Recipe recipe = getRecipeByID(id);
         if(recipe == null)return false;

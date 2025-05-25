@@ -9,34 +9,30 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.meinkochbuch.core.model.RecipeManager;
-import com.example.meinkochbuch.util.OptionalLong;
-
 import java.util.LinkedList;
-import java.util.Optional;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATION_DELIMITER = " ";
     private static final String DATABASE_NAME = "recipes.db";
 
-    private LinkedList<String> initTables = new LinkedList<>();
+    private LinkedList<SQLModel<?>> tableManagers = new LinkedList<>();
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
     }
 
-    public void addTableCreation(String sql){
-        initTables.add(sql);
+    public void addTableManager(SQLModel<?> model){
+        tableManagers.add(model);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         Log.i("DatabaseHelper", "Creating Database");
-        for(String init : initTables){
-            db.execSQL(init);
+        for(SQLModel<?> init : tableManagers){
+            db.execSQL(init.buildCreateStatement());
         }
-        initTables = null;
+        tableManagers = null;
 
     }
 
@@ -50,10 +46,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("Database", "Upgrading DB from v"+oldVersion+" to v"
                 +newVersion+" and dropping everything");
-        db.execSQL("DROP TABLE ShoppingList");
-        db.execSQL("DROP TABLE RecipeIngredient");
-        db.execSQL("DROP TABLE Ingredient");
-        db.execSQL("DROP TABLE Recipe");
+        for(SQLModel<?> model : tableManagers){
+            if(!tableExists(db, model.getTableName()))continue;
+            db.execSQL("DELETE TABLE "+model.getTableName());
+        }
+    }
+
+    private boolean tableExists(SQLiteDatabase db, String table){
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", new String[]{table});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
     }
 
     // -- Database Interaction --

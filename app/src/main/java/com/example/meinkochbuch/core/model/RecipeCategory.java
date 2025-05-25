@@ -1,6 +1,7 @@
 package com.example.meinkochbuch.core.model;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -37,9 +38,14 @@ public class RecipeCategory {
         }
 
         @Override
+        protected String tableName() {
+            return "Category";
+        }
+
+        @Override
         public String buildCreateStatement() {
             return String.join(DatabaseHelper.CREATION_DELIMITER,
-                    "CREATE TABLE Category (",
+                    "CREATE TABLE "+tableName+" (",
                     "RecipeID INTEGER,",
                     "Name TEXT,",
                     "PRIMARY KEY (RecipeID),",
@@ -49,7 +55,7 @@ public class RecipeCategory {
 
         @Override
         public void save(RecipeCategory modelObj) {
-            DatabaseHelper.DatabaseWriter writer = database.write("Category");
+            DatabaseHelper.DatabaseWriter writer = database.write(tableName);
             writer.values.put("RecipeID", modelObj.recipe.id);
             writer.values.put("Name", modelObj.category.name());
             writer.close();
@@ -58,13 +64,13 @@ public class RecipeCategory {
         @Override
         public void delete(RecipeCategory modelObj) {
             SQLiteDatabase db = database.getWritableDatabase();
-            db.execSQL("DELETE FROM Category WHERE RecipeID = ? AND Name = ?",
+            db.execSQL("DELETE FROM "+tableName+" WHERE RecipeID = ? AND Name = ?",
                     new Object[]{modelObj.recipe.id, modelObj.category.name()});
         }
 
         @Override
         public Collection<RecipeCategory> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Category");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM "+tableName);
             ArrayList<RecipeCategory> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

@@ -1,5 +1,6 @@
 package com.example.meinkochbuch.filter;
 
+import com.example.meinkochbuch.core.model.Category;
 import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 
@@ -63,6 +64,10 @@ public interface FilterCriteria {
      */
     static FilterCriteria minMaxTime(int min, int max){
         return recipe -> recipe.getProcessingTime() >= min && recipe.getProcessingTime() <= max;
+    }
+
+    static FilterCriteria categorizes(Category... categories){
+        return recipe -> recipe.isCategorizedAs(categories);
     }
 
     /**

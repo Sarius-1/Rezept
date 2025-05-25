@@ -1,21 +1,30 @@
 package com.example.meinkochbuch.core.model;
 
-public enum Unit {
+import lombok.Getter;
 
-    MILLILITER,
-    LITER,
-    MILLIGRAM,
-    GRAM,
-    KILOGRAM,
-    PINCH, //Prise
-    WEDGE, //Ecke
-    BUNCH, //Bund
-    PIECE, //Stück
-    TEA_SPOON,
-    TABLE_SPOON,
-    CUP,
-    FOOTBALL_FIELD,
-    FL_OZ,
-    CUBE,
+@Getter
+public enum Unit {
+    MILLILITER("Milliliter"),
+    LITER("Liter"),
+    MILLIGRAM("Milligram"),
+    GRAM("Gramm"),
+    KILOGRAM("Kilogramm"),
+    PINCH("Prise"), //Prise
+    WEDGE("Ecke(n)"), //Ecke
+    BUNCH("Bund"), //Bund
+    PIECE("Stück(e)"), //Stück
+    TEA_SPOON("Teelöffel"),
+    TABLE_SPOON("Esslöffel"),
+    CUP("Becher"),
+    FOOTBALL_FIELD("Fußballfeld(er)"),
+    FL_OZ("Fluid ounce"),
+    CUBE("Würfel"),
+    ;
+
+    private final String localizedName;
+    Unit(String localizedName) {
+        this.localizedName = localizedName;
+    }
+
 
 }

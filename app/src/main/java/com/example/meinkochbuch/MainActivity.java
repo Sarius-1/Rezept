@@ -30,7 +30,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.meinkochbuch.core.model.Ingredient;
+import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
+import com.example.meinkochbuch.core.model.Unit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,12 +62,27 @@ public class MainActivity extends AppCompatActivity {
 
     private final long UPDATE_INTERVAL = TimeUnit.MINUTES.toMillis(5);
 
+    @Deprecated
+    private static void test(){
+        Log.d("MainActivityTest", "Testing recipes");
+        if(!RecipeManager.getInstance().getRecipesByName("Tortilla Columbia").isEmpty()){
+            Log.d("MainActivityTest", "Tortilla Columbia exists! Ayyy!");
+            return;
+        }
+        Ingredient ingredient = RecipeManager.getInstance().tryRegisterIngredient("Cocaine");
+        Recipe recipe = RecipeManager.getInstance().
+                createRecipe("Tortilla Columbia", 10, 2, 5, "Lorem ipsum");
+        RecipeManager.getInstance().addIngredient(recipe, ingredient, 5, Unit.PINCH);
+        Log.d("MainActivityTest", "Created "+recipe+" and "+ingredient);
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RecipeManager.init(getApplicationContext());
+
+        test();
 
         setContentView(R.layout.activity_main);
 

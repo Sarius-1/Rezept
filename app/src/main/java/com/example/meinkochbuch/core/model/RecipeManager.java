@@ -350,6 +350,24 @@ public class RecipeManager {
         return recipe;
     }
 
+    public boolean deleteRecipe(@NotNull Recipe recipe){
+        if(!RECIPE_BY_ID.containsKey(recipe.id)){
+            Log.w(TAG, "Tried to remove recipe "+recipe+" but it is not registered!");
+            return false;
+        }
+        Log.i(TAG, "Deleting recipe (ID:"+recipe.id+")!");
+        for(RecipeIngredient ingredient : recipe.ingredients)sqlRecipeIngredient.delete(ingredient);
+        sqlRecipe.delete(recipe);
+        RECIPE_BY_ID.remove(recipe.id);
+        Log.i(TAG, "Recipe deleted!");
+        return true;
+    }
+    public boolean deleteRecipe(int id){
+        Recipe recipe = getRecipeByID(id);
+        if(recipe == null)return false;
+        return deleteRecipe(recipe);
+    }
+
     // -- Categories --
 
     /**
@@ -379,7 +397,7 @@ public class RecipeManager {
         Iterator<RecipeCategory> itr = recipe.categories.iterator();
         while (itr.hasNext()){
             RecipeCategory rc = itr.next();
-            if(rc.category == category)continue;
+            if(rc.category != category)continue;
             sqlRecipeCategory.delete(rc);
             itr.remove();
             Log.i(TAG, "Removed category from the recipe!");

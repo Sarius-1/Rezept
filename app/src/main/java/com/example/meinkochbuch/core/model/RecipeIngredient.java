@@ -45,9 +45,14 @@ public class RecipeIngredient {
         }
 
         @Override
+        protected String tableName() {
+            return "RecipeIngredient";
+        }
+
+        @Override
         public String buildCreateStatement() {
             return String.join(DatabaseHelper.CREATION_DELIMITER,
-                    "CREATE TABLE RecipeIngredient (",
+                    "CREATE TABLE "+tableName+" (",
                     "IngredientID INTEGER,",
                     "RecipeID INTEGER,",
                     "Amount INTEGER,",
@@ -61,7 +66,7 @@ public class RecipeIngredient {
         @Override
         public void save(RecipeIngredient modelObj) {
             //Ingredient should already be saved beforehand
-            DatabaseHelper.DatabaseWriter writer = database.write("RecipeIngredient");
+            DatabaseHelper.DatabaseWriter writer = database.write(tableName);
             writer.values.put("IngredientID", modelObj.ingredient.id);
             writer.values.put("RecipeID", modelObj.recipe.id);
             writer.values.put("Amount", modelObj.amount);
@@ -72,13 +77,13 @@ public class RecipeIngredient {
         @Override
         public void delete(RecipeIngredient modelObj) {
             SQLiteDatabase db = database.getWritableDatabase();
-            db.execSQL("DELETE FROM RecipeIngredient WHERE IngredientID = ? AND RecipeID = ? AND Amount = ? AND Unit = ?",
+            db.execSQL("DELETE FROM "+tableName+" WHERE IngredientID = ? AND RecipeID = ? AND Amount = ? AND Unit = ?",
                     new Object[]{modelObj.ingredient.id, modelObj.recipe.id, modelObj.amount, modelObj.unit.name()});
         }
 
         @Override
         public Collection<RecipeIngredient> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM RecipeIngredient");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM "+tableName);
             ArrayList<RecipeIngredient> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

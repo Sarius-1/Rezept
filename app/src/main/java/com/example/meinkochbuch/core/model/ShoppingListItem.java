@@ -44,9 +44,14 @@ public class ShoppingListItem {
         }
 
         @Override
+        protected String tableName() {
+            return "ShoppingList";
+        }
+
+        @Override
         public String buildCreateStatement() {
             return String.join(DatabaseHelper.CREATION_DELIMITER,
-                    "CREATE TABLE ShoppingList (",
+                    "CREATE TABLE "+tableName+" (",
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
                     "IngredientID INTEGER,",
                     "Amount INTEGER",
@@ -58,7 +63,7 @@ public class ShoppingListItem {
 
         @Override
         public void save(ShoppingListItem modelObj) {
-            DatabaseHelper.DatabaseWriter writer = database.write("ShoppingList");
+            DatabaseHelper.DatabaseWriter writer = database.write(tableName);
             writer.values.put("IngredientID", modelObj.ingredient.id);
             writer.values.put("Amount", modelObj.amount);
             writer.values.put("Unit", modelObj.unit.name());
@@ -69,26 +74,26 @@ public class ShoppingListItem {
         @Override
         public void delete(ShoppingListItem modelObj) {
             database.getWritableDatabase().execSQL(
-                    "DELETE FROM ShoppingList WHERE ID = ?", new Object[]{String.valueOf(modelObj.id)});
+                    "DELETE FROM "+tableName+" WHERE ID = ?", new Object[]{String.valueOf(modelObj.id)});
         }
 
         public void setChecked(ShoppingListItem item, boolean checked){
             ContentValues values = new ContentValues();
             values.put("Checked", checked);
-            database.getWritableDatabase().update("ShoppingList", values, "ID = ?",
+            database.getWritableDatabase().update(tableName, values, "ID = ?",
                     new String[]{String.valueOf(item.id)});
         }
 
         public void setAmount(ShoppingListItem item, int amount){
             ContentValues values = new ContentValues();
             values.put("Amount", amount);
-            database.getWritableDatabase().update("ShoppingList", values, "ID = ?",
+            database.getWritableDatabase().update(tableName, values, "ID = ?",
                     new String[]{String.valueOf(item.id)});
         }
 
         @Override
         public Collection<ShoppingListItem> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM ShoppingList ORDER BY ID ASC");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM "+tableName+" ORDER BY ID ASC");
             ArrayList<ShoppingListItem> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

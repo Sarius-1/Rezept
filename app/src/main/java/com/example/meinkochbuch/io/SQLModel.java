@@ -4,13 +4,20 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Collection;
 
+import lombok.Getter;
+
 public abstract class SQLModel<T> {
 
     protected final DatabaseHelper database;
+    @Getter
+    protected final String tableName;
     public SQLModel(DatabaseHelper database){
         this.database = database;
-        database.addTableCreation(buildCreateStatement());
+        this.tableName = tableName();
+        database.addTableManager(this);
     }
+
+    protected abstract String tableName();
 
     public abstract String buildCreateStatement();
 

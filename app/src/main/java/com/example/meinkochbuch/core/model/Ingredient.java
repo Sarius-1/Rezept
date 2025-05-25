@@ -48,9 +48,14 @@ public class Ingredient {
         }
 
         @Override
+        protected String tableName() {
+            return "Ingredient";
+        }
+
+        @Override
         public String buildCreateStatement() {
             return String.join(DatabaseHelper.CREATION_DELIMITER,
-                    "CREATE TABLE Ingredient (",
+                    "CREATE TABLE "+tableName+" (",
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
                     "Name TEXT NOT NULL)"
             );
@@ -58,7 +63,7 @@ public class Ingredient {
 
         @Override
         public void save(Ingredient ingredient){
-            DatabaseHelper.DatabaseWriter writer = database.write("Ingredient");
+            DatabaseHelper.DatabaseWriter writer = database.write(tableName);
             writer.values.put("Name", ingredient.name);
             ingredient.id = writer.closeGetID();
         }
@@ -66,12 +71,12 @@ public class Ingredient {
         @Override
         public void delete(Ingredient modelObj) {
             SQLiteDatabase db = database.getWritableDatabase();
-            db.execSQL("DELETE FROM Ingredient WHERE ID = ?", new Object[]{String.valueOf(modelObj.id)});
+            db.execSQL("DELETE FROM "+tableName+" WHERE ID = ?", new Object[]{String.valueOf(modelObj.id)});
         }
 
         @Override
         public Collection<Ingredient> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Ingredient ORDER BY ID ASC");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM "+tableName+" ORDER BY ID ASC");
             ArrayList<Ingredient> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

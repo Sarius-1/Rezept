@@ -93,9 +93,14 @@ public class Recipe {
         }
 
         @Override
+        protected String tableName() {
+            return "Recipe";
+        }
+
+        @Override
         public String buildCreateStatement() {
             return String.join(DatabaseHelper.CREATION_DELIMITER,
-                    "CREATE TABLE Recipe (",
+                    "CREATE TABLE "+tableName+" (",
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
                     "Name TEXT NOT NULL,",
                     "ProcessingTime INTEGER,",
@@ -106,7 +111,7 @@ public class Recipe {
 
         @Override
         public void save(Recipe recipe) {
-            DatabaseHelper.DatabaseWriter writer = database.write("Recipe");
+            DatabaseHelper.DatabaseWriter writer = database.write(tableName);
             writer.values.put("Name", recipe.name);
             writer.values.put("ProcessingTime", recipe.processingTime);
             writer.values.put("Portions", recipe.portions);
@@ -118,12 +123,12 @@ public class Recipe {
         @Override
         public void delete(Recipe modelObj) {
             SQLiteDatabase db = database.getWritableDatabase();
-            db.execSQL("DELETE FROM Recipe WHERE ID = ?", new Object[]{modelObj.id});
+            db.execSQL("DELETE FROM "+tableName+" WHERE ID = ?", new Object[]{modelObj.id});
         }
 
         @Override
         public Collection<Recipe> loadAll() {
-            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM Recipe ORDER BY ID ASC");
+            DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM "+tableName+" ORDER BY ID ASC");
             ArrayList<Recipe> list = new ArrayList<>(reader.cursor.getCount());
             if (reader.cursor.moveToFirst()) {
                 do {

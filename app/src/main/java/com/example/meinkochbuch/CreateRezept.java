@@ -20,11 +20,23 @@ import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.Unit;
 import com.google.android.material.textfield.TextInputEditText;
 
+/**
+ * A Fragment that allows the user to create a new recipe.
+ * Users can enter recipe metadata and dynamically add ingredients with unit and amount.
+ */
 public class CreateRezept extends Fragment {
 
     private LinearLayout zutatenContainer;
     private Button btnZutatHinzufuegen, btnRezeptSpeichern;
 
+    /**
+     * Inflates the layout and sets up listeners for adding ingredients and saving the recipe.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The root View for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,6 +46,7 @@ public class CreateRezept extends Fragment {
         btnZutatHinzufuegen = rootView.findViewById(R.id.btn_zutat_hinzufuegen);
         btnRezeptSpeichern = rootView.findViewById(R.id.btn_rezept_speichern);
 
+        // Listener to dynamically add ingredient input fields
         View.OnClickListener addZutatView = v -> {
             View zutatView = inflater.inflate(R.layout.item_zutat, zutatenContainer, false);
 
@@ -64,8 +77,9 @@ public class CreateRezept extends Fragment {
         };
 
         btnZutatHinzufuegen.setOnClickListener(addZutatView);
-        addZutatView.onClick(null); // direkt ein erstes Feld hinzufügen
+        addZutatView.onClick(null); // Add first ingredient field by default
 
+        // Listener to save the recipe
         btnRezeptSpeichern.setOnClickListener(v -> {
             try {
                 String name = ((TextInputEditText) rootView.findViewById(R.id.et_rezept_name)).getText().toString().trim();
@@ -97,15 +111,13 @@ public class CreateRezept extends Fragment {
                     }
                 }
 
-                Toast.makeText(getContext(), "Rezept erfolgreich gespeichert!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Recipe saved successfully!", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Toast.makeText(getContext(), "Fehler beim Speichern: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Error while saving: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         });
 
         return rootView;
     }
-
-
 }

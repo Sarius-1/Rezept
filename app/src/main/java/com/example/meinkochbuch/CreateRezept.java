@@ -42,17 +42,18 @@ public class CreateRezept extends Fragment {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
-                    ((android.widget.TextView) view).setText(getReadableName(getItem(position)));
+                    ((android.widget.TextView) view).setText(getItem(position).getLocalizedName());
                     return view;
                 }
 
                 @Override
                 public View getDropDownView(int position, View convertView, ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
-                    ((android.widget.TextView) view).setText(getReadableName(getItem(position)));
+                    ((android.widget.TextView) view).setText(getItem(position).getLocalizedName());
                     return view;
                 }
             };
+
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerEinheit.setAdapter(adapter);
 
@@ -106,24 +107,5 @@ public class CreateRezept extends Fragment {
         return rootView;
     }
 
-    private String getReadableName(Unit unit) {
-        switch (unit) {
-            case MILLILITER: return "Milliliter";
-            case LITER: return "Liter";
-            case MILLIGRAM: return "Milligramm";
-            case GRAM: return "Gramm";
-            case KILOGRAM: return "Kilogramm";
-            case PINCH: return "Prise";
-            case WEDGE: return "Ecke";
-            case BUNCH: return "Bund";
-            case PIECE: return "Stück";
-            case TEA_SPOON: return "Teelöffel";
-            case TABLE_SPOON: return "Esslöffel";
-            case CUP: return "Tasse";
-            case FOOTBALL_FIELD: return "Fußballfeld";
-            case FL_OZ: return "Flüssigunze";
-            case CUBE: return "Würfel";
-            default: return unit.name();
-        }
-    }
+
 }

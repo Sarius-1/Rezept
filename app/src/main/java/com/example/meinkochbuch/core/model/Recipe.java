@@ -1,5 +1,6 @@
 package com.example.meinkochbuch.core.model;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
@@ -70,6 +71,10 @@ public class Recipe {
         return count == categories.length;
     }
 
+    public boolean hasRating(){
+        return rating > 0;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -124,6 +129,13 @@ public class Recipe {
         public void delete(Recipe modelObj) {
             SQLiteDatabase db = database.getWritableDatabase();
             db.execSQL("DELETE FROM "+tableName+" WHERE ID = ?", new Object[]{modelObj.id});
+        }
+
+        public void setRating(int rating){
+            ContentValues values = new ContentValues();
+            values.put("Rating", rating);
+            database.getWritableDatabase().update(tableName, values, "ID = ?",
+                    new String[]{String.valueOf(rating)});
         }
 
         @Override

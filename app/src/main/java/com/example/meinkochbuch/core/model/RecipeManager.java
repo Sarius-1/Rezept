@@ -306,17 +306,15 @@ public class RecipeManager {
      * @param name The name of the recipe.
      * @param processingTime The processing time.
      * @param portions The portions.
-     * @param rating The rating.
      * @param text The description (can be {@code null}).
      * @return The newly created recipe.
      */
-    public Recipe createRecipe(@NotNull String name, int processingTime, int portions, int rating, String text){
+    public Recipe createRecipe(@NotNull String name, int processingTime, int portions, String text){
         Log.i(TAG, "Creating recipe '"+name+"'...");
         Recipe recipe = new Recipe();
         recipe.name = name;
         recipe.processingTime = processingTime;
         recipe.portions = portions;
-        recipe.rating = rating;
         recipe.guideText = text;
         sqlRecipe.save(recipe); //this needs to come first!
         RECIPE_BY_ID.put(recipe.id, recipe); //then put into map!
@@ -351,6 +349,26 @@ public class RecipeManager {
         Recipe recipe = getRecipeByID(id);
         if(recipe == null)return false;
         return deleteRecipe(recipe);
+    }
+
+    /**
+     * Sets the rating of a recipe to the specified one (must be in range of 0-5, both inclusive).
+     * @param recipe The recipe to set the rating for.
+     * @param rating The rating to set.
+     */
+    public void setRating(@NotNull Recipe recipe, int rating){
+        if(rating < 0 || rating > 5){
+            Log.e(TAG, "Cannot apply rating to recipe (ID:"+recipe.id+") because '"+rating+"' isn't in range (0-5).");
+            return;
+        }
+        if(!RECIPE_BY_ID.containsKey(recipe.id)){
+            Log.e(TAG, "Tried to set rating of recipe "+recipe+" but it is not registered!");
+            return;
+        }
+        Log.i(TAG, "Setting rating to "+rating+" of recipe (ID:"+recipe.id+")...");
+        sqlRecipe.setRating(rating);
+        recipe.rating = rating;
+        Log.i(TAG, "Rating successfully set!");
     }
 
     // -- Categories --

@@ -69,32 +69,6 @@ public class RecipeManager {
         this.sqlShoppingListItem = new ShoppingListItem.SQLShoppingListItem(database);
     }
 
-    @Deprecated
-    private void test(){
-        Log.d(TAG, "Start of test");
-        if(RECIPE_BY_ID.isEmpty()){
-
-            Ingredient ingredient = tryRegisterIngredient("Zucker");
-            Recipe recipe = createRecipe("Schokokuchen", 60, 6, 5,
-                    "This is how you create a cake...");
-            addIngredient(recipe, ingredient, 5, Unit.CUBE);
-            Log.d(TAG, "Ingredients of "+recipe.name+" are "+recipe.ingredients.size());
-
-        }else{
-            Log.d(TAG, "Loading recipe");
-            Collection<Recipe> recipes = getRecipesByName("Schokokuchen");
-            Log.i(TAG, "Loaded recipes with 'Schokokuchen' = "+recipes);
-            for(Recipe recipe : recipes){
-                Log.i(TAG, "Ingredients in "+recipe.name+" = "+recipe.ingredients);
-            }
-            deleteIngredient("Zucker");
-            for(Recipe recipe : recipes){
-                Log.i(TAG, "Ingredients in "+recipe.name+" = "+recipe.ingredients);
-            }
-        }
-
-    }
-
     /**
      * Loads all model objects from the database into memory.
      */

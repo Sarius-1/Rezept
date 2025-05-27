@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private LinkedList<SQLModel<?>> tableManagers = new LinkedList<>();
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 3);
     }
 
     public void addTableManager(SQLModel<?> model){
@@ -48,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 +newVersion+" and dropping everything");
         for(SQLModel<?> model : tableManagers){
             if(!tableExists(db, model.getTableName()))continue;
-            db.execSQL("DELETE TABLE "+model.getTableName());
+            db.execSQL("DROP TABLE "+model.getTableName());
         }
     }
 

@@ -12,10 +12,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Neues Rezept erstellen"
+            android:text="@string/title_create_recipe"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
 
         <!-- Rezeptname -->
         <com.google.android.material.textfield.TextInputLayout
@@ -27,8 +27,8 @@
                 android:id="@+id/et_rezept_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Rezeptname"
-                android:inputType="text"/>
+                android:hint="@string/hint_recipe_name"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Portionen -->
@@ -41,8 +41,8 @@
                 android:id="@+id/et_portionen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Portionen"
-                android:inputType="number"/>
+                android:hint="@string/hint_portions"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Zubereitungszeit -->
@@ -55,8 +55,8 @@
                 android:id="@+id/et_zubereitungszeit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Zubereitungszeit (Minuten)"
-                android:inputType="number"/>
+                android:hint="@string/hint_preparation_time"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Beschreibung -->
@@ -69,38 +69,40 @@
                 android:id="@+id/et_zubereitung"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Zubereitungsschritte"
+                android:hint="@string/hint_preparation_steps"
                 android:inputType="textMultiLine"
-                android:minLines="4"/>
+                android:minLines="4" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Zutaten -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Zutaten"
+            android:text="@string/label_ingredients"
             android:textSize="18sp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" />
+
         <LinearLayout
             android:id="@+id/container_zutaten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
+
         <Button
             android:id="@+id/btn_zutat_hinzufuegen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Zutat hinzufügen"
-            android:layout_marginBottom="16dp"/>
+            android:text="@string/btn_add_ingredient"
+            android:layout_marginBottom="16dp" />
 
         <!-- Speichern Button -->
         <Button
             android:id="@+id/btn_rezept_speichern"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rezept speichern"
+            android:text="@string/btn_save_recipe"
             android:layout_marginTop="16dp"
-            style="@style/Widget.MaterialComponents.Button"/>
+            style="@style/Widget.MaterialComponents.Button" />
     </LinearLayout>
 </ScrollView>

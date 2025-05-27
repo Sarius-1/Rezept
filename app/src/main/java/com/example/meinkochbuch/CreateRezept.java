@@ -88,7 +88,7 @@ public class CreateRezept extends Fragment {
                 int zeit = Integer.parseInt(((TextInputEditText) rootView.findViewById(R.id.et_zubereitungszeit)).getText().toString());
 
                 RecipeManager manager = RecipeManager.getInstance();
-                Recipe recipe = manager.createRecipe(name, zeit, portionen, 0, beschreibung);
+                Recipe recipe = manager.createRecipe(name, zeit, portionen, beschreibung);
 
                 for (int i = 0; i < zutatenContainer.getChildCount(); i++) {
                     View zutatView = zutatenContainer.getChildAt(i);
@@ -111,9 +111,9 @@ public class CreateRezept extends Fragment {
                     }
                 }
 
-                Toast.makeText(getContext(), "Recipe saved successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.toast_recipe_saved), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Toast.makeText(getContext(), "Error while saving: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.toast_recipe_save_error, e.getMessage()), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         });

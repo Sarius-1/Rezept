@@ -66,6 +66,10 @@ public interface FilterCriteria {
         return recipe -> recipe.getProcessingTime() >= min && recipe.getProcessingTime() <= max;
     }
 
+    static FilterCriteria any(){
+        return recipe -> true;
+    }
+
     static FilterCriteria categorizes(Category... categories){
         return recipe -> recipe.isCategorizedAs(categories);
     }

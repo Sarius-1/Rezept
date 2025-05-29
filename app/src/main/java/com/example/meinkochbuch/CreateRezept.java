@@ -88,7 +88,7 @@ public class CreateRezept extends Fragment {
                 int zeit = Integer.parseInt(((TextInputEditText) rootView.findViewById(R.id.et_zubereitungszeit)).getText().toString());
 
                 RecipeManager manager = RecipeManager.getInstance();
-                Recipe recipe = manager.createRecipe(name, zeit, portionen, 0, beschreibung);
+                Recipe recipe = manager.createRecipe(name, zeit, portionen, beschreibung);
 
                 for (int i = 0; i < zutatenContainer.getChildCount(); i++) {
                     View zutatView = zutatenContainer.getChildAt(i);

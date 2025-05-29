@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/rezept">
+    app:startDestination="@id/FirstFragment">
 
     <activity
         android:id="@+id/main_activity_destination"
@@ -12,12 +12,21 @@
         android:id="@+id/FirstFragment"
         android:name="com.example.meinkochbuch.FirstFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first"/>
+        tools:layout="@layout/fragment_first">
+        <action
+            android:id="@+id/action_FirstFragment_to_rezept"
+            app:destination="@id/rezept" />
+    </fragment>
     <fragment
         android:id="@+id/rezept"
         android:name="com.example.meinkochbuch.Rezept"
         android:label="fragment_rezept"
-        tools:layout="@layout/fragment_rezept" />
+        tools:layout="@layout/fragment_rezept" >
+        <argument
+            android:name="recipe"
+            app:argType="com.example.meinkochbuch.core.model.Recipe"
+            app:nullable="false" />
+    </fragment>
     <fragment
         android:id="@+id/createRezept"
         android:name="com.example.meinkochbuch.CreateRezept"
@@ -28,8 +37,5 @@
         android:name="com.example.meinkochbuch.EinkaufslisteFragment"
         android:label="fragment_einkaufsliste"
         tools:layout="@layout/fragment_einkaufsliste">
-        <action
-            android:id="@+id/action_einkaufslisteToHomeFragment"
-            app:destination="@+id/FirstFragment" />
     </fragment>
 </navigation>

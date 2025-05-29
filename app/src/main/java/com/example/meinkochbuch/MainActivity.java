@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Ingredient ingredient = RecipeManager.getInstance().tryRegisterIngredient("Cocaine");
         Recipe recipe = RecipeManager.getInstance().
-                createRecipe("Tortilla Columbia", 10, 2, 5, "Lorem ipsum");
+                createRecipe("Tortilla Columbia", 10, 2, "Lorem ipsum");
         RecipeManager.getInstance().addIngredient(recipe, ingredient, 5, Unit.PINCH);
         Log.d("MainActivityTest", "Created "+recipe+" and "+ingredient);
     }
@@ -89,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
         // NavController abrufen
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_content_main);
-
-        if (navHostFragment == null) {
-            throw new IllegalStateException("NavHostFragment not found. Check your layout file.");
-        }
 
         NavController navController = navHostFragment.getNavController();
 

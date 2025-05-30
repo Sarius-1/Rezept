@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class ShoppingListItem {
 
     long id;
-    int amount;
+    double amount;
     Ingredient ingredient;
     Unit unit;
     boolean checked;
@@ -54,7 +54,7 @@ public class ShoppingListItem {
                     "CREATE TABLE "+tableName+" (",
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
                     "IngredientID INTEGER,",
-                    "Amount INTEGER,",
+                    "Amount REAL,",
                     "Unit TEXT,",
                     "Checked INTEGER DEFAULT 0,",
                     "FOREIGN KEY (IngredientID) REFERENCES Ingredient(ID) ON DELETE CASCADE", ")"
@@ -84,7 +84,7 @@ public class ShoppingListItem {
                     new String[]{String.valueOf(item.id)});
         }
 
-        public void setAmount(ShoppingListItem item, int amount){
+        public void setAmount(ShoppingListItem item, double amount){
             ContentValues values = new ContentValues();
             values.put("Amount", amount);
             database.getWritableDatabase().update(tableName, values, "ID = ?",
@@ -99,7 +99,7 @@ public class ShoppingListItem {
                 do {
                     long id = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("ID"));
                     long ingredientID = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("IngredientID"));
-                    int amount = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("Amount"));
+                    double amount = reader.cursor.getDouble(reader.cursor.getColumnIndexOrThrow("Amount"));
                     String unit = reader.cursor.getString(reader.cursor.getColumnIndexOrThrow("Unit"));
                     int checked = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("Checked"));
                     ShoppingListItem item = new ShoppingListItem();

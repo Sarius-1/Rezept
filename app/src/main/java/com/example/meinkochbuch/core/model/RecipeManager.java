@@ -441,7 +441,7 @@ public final class RecipeManager {
      * @param ingredient The ingredient to add.
      * @param unit The unit for the ingredient.
      */
-    public void addShoppingListItem(@NotNull Ingredient ingredient, int amount, Unit unit){
+    public void addShoppingListItem(@NotNull Ingredient ingredient, double amount, Unit unit){
         Log.i(TAG, "Adding shopping list item ("+ingredient+", "+unit+")...");
         for(ShoppingListItem item : getShoppingList()){
             if(item.ingredient == ingredient && item.unit == unit){
@@ -497,7 +497,7 @@ public final class RecipeManager {
      * @param item The item to set the amount for.
      * @param amount The amount to set.
      */
-    public void setShoppingListItemAmount(@NotNull ShoppingListItem item, int amount){
+    public void setShoppingListItemAmount(@NotNull ShoppingListItem item, double amount){
         if(amount <= 0){
             if(ITEM_BY_ID.containsKey(item.id))removeShoppingListItem(item);
             return;

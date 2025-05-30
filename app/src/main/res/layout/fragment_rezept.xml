@@ -33,6 +33,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Button: Zutaten zur Einkaufsliste -->
+        <Button
+            android:id="@+id/button_add_to_shopping_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zur Einkaufsliste"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@id/text_rezept_name"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <!-- Zubereitungszeit -->
         <TextView
             android:id="@+id/text_zeit"
@@ -67,12 +77,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Zutatenliste -->
-        <TextView
-            android:id="@+id/text_zutaten"
+        <!-- Zutatenliste mit Checkboxen -->
+        <LinearLayout
+            android:id="@+id/layout_zutaten_liste"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/edit_portionen"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -83,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/text_zutaten"
+            app:layout_constraintTop_toBottomOf="@id/layout_zutaten_liste"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

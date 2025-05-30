@@ -34,6 +34,7 @@ import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.Unit;
+import com.example.meinkochbuch.io.ImageDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.FirstFragment);
         });
 
+        ImageDatabase.init(this);
 
         initWeatherCycle();
 

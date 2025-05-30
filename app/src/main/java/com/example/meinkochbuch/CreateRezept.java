@@ -111,9 +111,9 @@ public class CreateRezept extends Fragment {
                     }
                 }
 
-                Toast.makeText(getContext(), "Recipe saved successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.toast_recipe_saved), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Toast.makeText(getContext(), "Error while saving: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.toast_recipe_save_error, e.getMessage()), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         });

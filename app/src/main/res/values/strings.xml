@@ -7,6 +7,34 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+
+    <!-- Fragment CreateRezept -->
+    <string name="toast_recipe_saved">Rezept erfolgreich gespeichert!</string>
+    <string name="toast_recipe_save_error">Fehler beim Speichern: %1$s</string>
+
+    <!-- Fragment CreateRezept – Layout Strings -->
+    <string name="title_create_recipe">Neues Rezept erstellen</string>
+    <string name="hint_recipe_name">Rezeptname</string>
+    <string name="hint_portions">Portionen</string>
+    <string name="hint_preparation_time">Zubereitungszeit (Minuten)</string>
+    <string name="hint_preparation_steps">Zubereitungsschritte</string>
+    <string name="label_ingredients">Zutaten</string>
+    <string name="label_recipe_image">Rezeptbild</string>
+    <string name="content_description_recipe_image">Rezeptbild anzeigen</string>
+    <string name="content_description_select_image">Bild auswählen</string>
+
+    <!-- item_zutat.xml – Strings -->
+    <string name="hint_amount">Menge</string>
+    <string name="hint_ingredient">Zutat</string>
+    <string name="content_description_remove_ingredient">Zutat entfernen</string>
+
+
+
+    <!-- Buttons / Labels -->
+    <string name="btn_add_ingredient">Zutat hinzufügen</string>
+    <string name="btn_save_recipe">Rezept speichern</string>
+    <string name="btn_remove">Entfernen</string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

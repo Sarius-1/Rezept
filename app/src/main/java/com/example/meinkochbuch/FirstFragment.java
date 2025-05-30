@@ -46,6 +46,21 @@ public class FirstFragment extends Fragment {
         binding.fabAddRecipe.setOnClickListener(v -> {
             navController.navigate(R.id.createRezept);
         });
+        binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Optional: Reaktion auf Enter-Taste
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Set<Recipe> newRecipes=RecipeManager.getInstance().filter(FilterCriteria.nameContains(newText));
+                RecipeAdapter newAdapter = new RecipeAdapter(getContext(), new ArrayList<>(newRecipes), navController);
+                binding.recipeRecyclerView.setAdapter(newAdapter);
+                return true;
+            }
+        });
         return binding.getRoot();
     }
 

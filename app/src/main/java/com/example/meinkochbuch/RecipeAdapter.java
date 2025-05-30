@@ -5,6 +5,7 @@ import android.graphics.Picture;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
@@ -17,10 +18,11 @@ import com.example.meinkochbuch.core.model.Recipe;
 
 import java.util.List;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>{
     private Context context;
     private List<Recipe> recipeList;
     private NavController navController;
+
 
     public RecipeAdapter(Context context, List<Recipe> recipeList, NavController navController) {
         this.context = context;

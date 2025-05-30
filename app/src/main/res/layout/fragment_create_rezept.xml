@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -9,6 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Titel -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -17,12 +19,45 @@
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
 
+        <!-- Rezeptbild -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_recipe_image"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/image_rezept"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:background="@android:color/background_light"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:contentDescription="@string/content_description_recipe_image" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_bild_auswaehlen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                app:srcCompat="@android:drawable/ic_menu_camera"
+                android:contentDescription="@string/content_description_select_image" />
+        </FrameLayout>
+
         <!-- Rezeptname -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_rezept_name"
                 android:layout_width="match_parent"
@@ -37,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_portionen"
                 android:layout_width="match_parent"
@@ -51,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_zubereitungszeit"
                 android:layout_width="match_parent"
@@ -65,13 +102,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_zubereitung"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_preparation_steps"
                 android:inputType="textMultiLine"
-                android:minLines="4" />
+                android:minLines="4"
+                android:gravity="top|start" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Zutaten -->
@@ -104,5 +143,6 @@
             android:text="@string/btn_save_recipe"
             android:layout_marginTop="16dp"
             style="@style/Widget.MaterialComponents.Button" />
+
     </LinearLayout>
 </ScrollView>

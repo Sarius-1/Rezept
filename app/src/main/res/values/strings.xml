@@ -19,6 +19,9 @@
     <string name="hint_preparation_time">Zubereitungszeit (Minuten)</string>
     <string name="hint_preparation_steps">Zubereitungsschritte</string>
     <string name="label_ingredients">Zutaten</string>
+    <string name="label_recipe_image">Rezeptbild</string>
+    <string name="content_description_recipe_image">Rezeptbild anzeigen</string>
+    <string name="content_description_select_image">Bild auswählen</string>
 
     <!-- item_zutat.xml – Strings -->
     <string name="hint_amount">Menge</string>

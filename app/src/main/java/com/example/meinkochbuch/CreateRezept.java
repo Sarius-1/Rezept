@@ -1,6 +1,11 @@
 package com.example.meinkochbuch;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +15,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,15 +35,47 @@ import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.Unit;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.io.File;
 
 public class CreateRezept extends Fragment {
 
     private LinearLayout ingredientContainer;
     private Button btnAddIngredient;
     private Button btnSaveRecipe;
+    private ImageView imageView;
+    private FloatingActionButton fabBildAuswaehlen;
+    private Uri selectedImageUri;
+    private Uri tempImageUri;
 
     private CheckBox cbVegan, cbVegetarian, cbGlutenFree, cbLactoseFree;
+
+    private final ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    selectedImageUri = result.getData().getData();
+                    imageView.setImageURI(selectedImageUri);
+                }
+            });
+
+    private final ActivityResultLauncher<Uri> takePhotoLauncher =
+            registerForActivityResult(new ActivityResultContracts.TakePicture(), success -> {
+                if (success && tempImageUri != null) {
+                    selectedImageUri = tempImageUri;
+                    imageView.setImageURI(tempImageUri);
+                }
+            });
+
+    private final ActivityResultLauncher<String> requestCameraPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    launchCameraIntent();
+                } else {
+                    Toast.makeText(requireContext(), "Kamerazugriff verweigert", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Nullable
     @Override
@@ -45,6 +86,8 @@ public class CreateRezept extends Fragment {
         ingredientContainer = rootView.findViewById(R.id.container_zutaten);
         btnAddIngredient = rootView.findViewById(R.id.btn_zutat_hinzufuegen);
         btnSaveRecipe = rootView.findViewById(R.id.btn_rezept_speichern);
+        imageView = rootView.findViewById(R.id.image_rezept);
+        fabBildAuswaehlen = rootView.findViewById(R.id.fab_bild_auswaehlen);
 
         cbVegan = rootView.findViewById(R.id.checkbox_vegan);
         cbVegetarian = rootView.findViewById(R.id.checkbox_vegetarian);
@@ -52,9 +95,10 @@ public class CreateRezept extends Fragment {
         cbLactoseFree = rootView.findViewById(R.id.checkbox_lactose_free);
 
         btnAddIngredient.setOnClickListener(v -> addIngredientView(inflater));
-        addIngredientView(inflater); // default
-
+        fabBildAuswaehlen.setOnClickListener(v -> showImagePickerDialog());
         btnSaveRecipe.setOnClickListener(v -> saveRecipe(rootView));
+
+        addIngredientView(inflater); // Standard-Zutatfeld
 
         return rootView;
     }
@@ -86,7 +130,6 @@ public class CreateRezept extends Fragment {
                 return view;
             }
         };
-
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerUnit.setAdapter(unitAdapter);
 
@@ -125,13 +168,18 @@ public class CreateRezept extends Fragment {
                 }
             }
 
-            // Kategorien zuweisen
             if (cbVegan.isChecked()) manager.addCategory(recipe, Category.VEGAN);
             if (cbVegetarian.isChecked()) manager.addCategory(recipe, Category.VEGETARIAN);
             if (cbGlutenFree.isChecked()) manager.addCategory(recipe, Category.GLUTEN_FREE);
             if (cbLactoseFree.isChecked()) manager.addCategory(recipe, Category.LACTOSE_FREE);
 
-            // standardmäßig ein Rating von Null hinzufügen
+            if (selectedImageUri != null) {
+                boolean success = manager.setImage(recipe, selectedImageUri);
+                if (!success) {
+                    Toast.makeText(requireContext(), "Bild konnte nicht gespeichert werden.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
             manager.setRating(recipe, 0);
 
             Toast.makeText(requireContext(), getString(R.string.toast_recipe_saved), Toast.LENGTH_SHORT).show();
@@ -142,6 +190,27 @@ public class CreateRezept extends Fragment {
             Toast.makeText(requireContext(), getString(R.string.toast_recipe_save_error, e.getMessage()), Toast.LENGTH_LONG).show();
             Log.e("CreateRezept", "Error while saving recipe", e);
         }
+    }
+
+    private void showImagePickerDialog() {
+        String[] options = {"Galerie", "Kamera"};
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Bild auswählen")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        imagePickerLauncher.launch(galleryIntent);
+                    } else {
+                        requestCameraPermissionLauncher.launch(android.Manifest.permission.CAMERA);
+                    }
+                })
+                .show();
+    }
+
+    private void launchCameraIntent() {
+        File imageFile = new File(requireContext().getCacheDir(), "temp_image.jpg");
+        tempImageUri = FileProvider.getUriForFile(requireContext(), "com.example.meinkochbuch.fileprovider", imageFile);
+        takePhotoLauncher.launch(tempImageUri);
     }
 
     @NonNull

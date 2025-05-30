@@ -441,13 +441,13 @@ public final class RecipeManager {
      * @param ingredient The ingredient to add.
      * @param unit The unit for the ingredient.
      */
-    public void addShoppingListItem(@NotNull Ingredient ingredient, double amount, Unit unit){
+    public ShoppingListItem addShoppingListItem(@NotNull Ingredient ingredient, double amount, Unit unit){
         Log.i(TAG, "Adding shopping list item ("+ingredient+", "+unit+")...");
         for(ShoppingListItem item : getShoppingList()){
             if(item.ingredient == ingredient && item.unit == unit){
                 //if item already exists, just set its amount.
                 setShoppingListItemAmount(item, amount);
-                return;
+                return item;
             }
         }
         ShoppingListItem item = new ShoppingListItem();
@@ -457,6 +457,7 @@ public final class RecipeManager {
         sqlShoppingListItem.save(item);
         ITEM_BY_ID.put(item.id, item);
         Log.i(TAG, "Item added! (ID: "+item.id+")");
+        return item;
     }
 
     /**

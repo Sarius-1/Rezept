@@ -226,7 +226,7 @@ public final class RecipeManager {
      * @param amount The amount used for displaying in combination with the unit.
      * @param unit The unit used for displaying in combiantion with the amount.
      */
-    public void addIngredient(@NotNull Recipe recipe, @NotNull Ingredient ingredient, int amount, Unit unit){
+    public void addIngredient(@NotNull Recipe recipe, @NotNull Ingredient ingredient, double amount, Unit unit){
         if(getRecipeByID(recipe.id) == null){
             Log.e(TAG, "Tried to add an ingredient to "+recipe+" but the recipe isn't registered!");
             return; //recipe is not registered

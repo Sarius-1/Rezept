@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private LinkedList<SQLModel<?>> tableManagers = new LinkedList<>();
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 4);
+        super(context, DATABASE_NAME, null, 5);
     }
 
     public void addTableManager(SQLModel<?> model){

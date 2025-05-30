@@ -25,7 +25,7 @@ public class RecipeIngredient {
 
     Recipe recipe;
     Ingredient ingredient;
-    int amount;
+    double amount;
     Unit unit;
 
     @NonNull
@@ -55,7 +55,7 @@ public class RecipeIngredient {
                     "CREATE TABLE "+tableName+" (",
                     "IngredientID INTEGER,",
                     "RecipeID INTEGER,",
-                    "Amount INTEGER,",
+                    "Amount REAL,",
                     "Unit TEXT,",
                     "PRIMARY KEY (IngredientID, RecipeID),",
                     "FOREIGN KEY (IngredientID) REFERENCES Ingredient(ID) ON DELETE CASCADE,",
@@ -89,7 +89,7 @@ public class RecipeIngredient {
                 do {
                     long ingredientID = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("IngredientID"));
                     long recipeID = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("RecipeID"));
-                    int amount = reader.cursor.getInt(reader.cursor.getColumnIndexOrThrow("Amount"));
+                    double amount = reader.cursor.getDouble(reader.cursor.getColumnIndexOrThrow("Amount"));
                     String _unit = reader.cursor.getString(reader.cursor.getColumnIndexOrThrow("Unit"));
                     RecipeIngredient ingredient = new RecipeIngredient();
                     ingredient.amount = amount;

@@ -2,6 +2,8 @@ package com.example.meinkochbuch.core.model;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
@@ -25,7 +27,7 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-public class Recipe {
+public class Recipe implements Parcelable {
 
     // -- Primary key --
     long id;
@@ -89,6 +91,15 @@ public class Recipe {
                 '}';
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+
+    }
 
 
     static class SQLRecipe extends SQLModel<Recipe>{

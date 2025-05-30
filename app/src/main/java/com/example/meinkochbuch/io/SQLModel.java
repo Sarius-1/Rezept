@@ -1,7 +1,5 @@
 package com.example.meinkochbuch.io;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import java.util.Collection;
 
 import lombok.Getter;

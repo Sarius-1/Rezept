@@ -6,12 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.meinkochbuch.core.model.Ingredient;
 
 import lombok.Getter;
-import lombok.Setter;
+
 
 import java.util.List;
 
 @Getter
-@Setter
 public class FilterViewModel extends ViewModel {
 
     // Bewertung von - bis
@@ -33,6 +32,8 @@ public class FilterViewModel extends ViewModel {
 
     // Event: Anwenden
     private final MutableLiveData<Void> applyFiltersEvent = new MutableLiveData<>();
+
+    private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
 
     // Methoden
     public void onApplyFiltersClicked() {

@@ -51,6 +51,45 @@
                 android:contentDescription="@string/content_description_select_image" />
         </FrameLayout>
 
+        <!-- Kategorien -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kategorien"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <CheckBox
+                android:id="@+id/checkbox_vegan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegan" />
+
+            <CheckBox
+                android:id="@+id/checkbox_vegetarian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetarisch" />
+
+            <CheckBox
+                android:id="@+id/checkbox_gluten_free"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Glutenfrei" />
+
+            <CheckBox
+                android:id="@+id/checkbox_lactose_free"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Laktosefrei" />
+        </LinearLayout>
+
         <!-- Rezeptname -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -143,6 +182,5 @@
             android:text="@string/btn_save_recipe"
             android:layout_marginTop="16dp"
             style="@style/Widget.MaterialComponents.Button" />
-
     </LinearLayout>
 </ScrollView>

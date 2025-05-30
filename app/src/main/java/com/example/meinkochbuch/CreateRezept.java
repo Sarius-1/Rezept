@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.meinkochbuch.core.model.Category;
 import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
@@ -32,6 +34,8 @@ public class CreateRezept extends Fragment {
     private Button btnAddIngredient;
     private Button btnSaveRecipe;
 
+    private CheckBox cbVegan, cbVegetarian, cbGlutenFree, cbLactoseFree;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -42,8 +46,13 @@ public class CreateRezept extends Fragment {
         btnAddIngredient = rootView.findViewById(R.id.btn_zutat_hinzufuegen);
         btnSaveRecipe = rootView.findViewById(R.id.btn_rezept_speichern);
 
+        cbVegan = rootView.findViewById(R.id.checkbox_vegan);
+        cbVegetarian = rootView.findViewById(R.id.checkbox_vegetarian);
+        cbGlutenFree = rootView.findViewById(R.id.checkbox_gluten_free);
+        cbLactoseFree = rootView.findViewById(R.id.checkbox_lactose_free);
+
         btnAddIngredient.setOnClickListener(v -> addIngredientView(inflater));
-        addIngredientView(inflater); // add one field by default
+        addIngredientView(inflater); // default
 
         btnSaveRecipe.setOnClickListener(v -> saveRecipe(rootView));
 
@@ -116,15 +125,19 @@ public class CreateRezept extends Fragment {
                 }
             }
 
-            Toast.makeText(requireContext(), getString(R.string.toast_recipe_saved), Toast.LENGTH_SHORT).show();
+            // Kategorien zuweisen
+            if (cbVegan.isChecked()) manager.addCategory(recipe, Category.VEGAN);
+            if (cbVegetarian.isChecked()) manager.addCategory(recipe, Category.VEGETARIAN);
+            if (cbGlutenFree.isChecked()) manager.addCategory(recipe, Category.GLUTEN_FREE);
+            if (cbLactoseFree.isChecked()) manager.addCategory(recipe, Category.LACTOSE_FREE);
 
+            Toast.makeText(requireContext(), getString(R.string.toast_recipe_saved), Toast.LENGTH_SHORT).show();
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(R.id.FirstFragment);
 
         } catch (Exception e) {
             Toast.makeText(requireContext(), getString(R.string.toast_recipe_save_error, e.getMessage()), Toast.LENGTH_LONG).show();
             Log.e("CreateRezept", "Error while saving recipe", e);
-
         }
     }
 

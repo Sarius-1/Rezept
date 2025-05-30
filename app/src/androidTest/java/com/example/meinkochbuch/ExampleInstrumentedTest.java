@@ -51,7 +51,7 @@ public class ExampleInstrumentedTest {
         assert RecipeManager.getInstance().getRecipesByName("Salz").isEmpty();
 
         // -- Recipe --
-        Recipe recipe = RecipeManager.getInstance().createRecipe("Kuchen", 180,1,5,"Some pie");
+        Recipe recipe = RecipeManager.getInstance().createRecipe("Kuchen", 180,1,"Some pie");
         assert !RecipeManager.getInstance().getRecipesByName("Kuchen").isEmpty();
 
         RecipeManager.getInstance().addIngredient(recipe, sugar, 50, Unit.FOOTBALL_FIELD);
@@ -62,11 +62,14 @@ public class ExampleInstrumentedTest {
         RecipeManager.getInstance().removeIngredient(recipe, recipe.getIngredients().get(0));
         assert !recipe.containsIngredients(sugar);
 
+        RecipeManager.getInstance().setRating(recipe, 5);
+        assert recipe.getRating() == 5;
+
         RecipeManager.getInstance().deleteRecipe(recipe);
         assert RecipeManager.getInstance().getRecipesByName(recipe.getName()).isEmpty();
 
         // -- Category & Filter --
-        recipe = RecipeManager.getInstance().createRecipe("Torte", 60, 3, 4, "Some cake");
+        recipe = RecipeManager.getInstance().createRecipe("Torte", 60, 3,  "Some cake");
         RecipeManager.getInstance().addIngredient(recipe, flour, 150, Unit.GRAM);
         RecipeManager.getInstance().addCategory(recipe, Category.VEGETARIAN);
         assert recipe.isCategorizedAs(Category.VEGETARIAN);

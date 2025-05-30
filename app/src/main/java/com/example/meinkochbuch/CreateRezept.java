@@ -73,7 +73,7 @@ public class CreateRezept extends Fragment {
                 if (isGranted) {
                     launchCameraIntent();
                 } else {
-                    Toast.makeText(requireContext(), "Kamerazugriff verweigert", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.toast_camera_permission_denied), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -176,7 +176,7 @@ public class CreateRezept extends Fragment {
             if (selectedImageUri != null) {
                 boolean success = manager.setImage(recipe, selectedImageUri);
                 if (!success) {
-                    Toast.makeText(requireContext(), "Bild konnte nicht gespeichert werden.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.toast_image_save_failed), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -193,9 +193,9 @@ public class CreateRezept extends Fragment {
     }
 
     private void showImagePickerDialog() {
-        String[] options = {"Galerie", "Kamera"};
+        String[] options = {getString(R.string.option_gallery), getString(R.string.option_camera)};
         new AlertDialog.Builder(requireContext())
-                .setTitle("Bild auswählen")
+                .setTitle(getString(R.string.dialog_select_image_title))
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
                         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

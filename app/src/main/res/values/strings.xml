@@ -11,6 +11,11 @@
     <!-- Fragment CreateRezept -->
     <string name="toast_recipe_saved">Rezept erfolgreich gespeichert!</string>
     <string name="toast_recipe_save_error">Fehler beim Speichern: %1$s</string>
+    <string name="toast_camera_permission_denied">Kamerazugriff verweigert</string>
+    <string name="toast_image_save_failed">Bild konnte nicht gespeichert werden.</string>
+    <string name="dialog_select_image_title">Bild auswählen</string>
+    <string name="option_gallery">Galerie</string>
+    <string name="option_camera">Kamera</string>
 
     <!-- Fragment CreateRezept – Layout Strings -->
     <string name="title_create_recipe">Neues Rezept erstellen</string>

@@ -373,7 +373,7 @@ public final class RecipeManager {
             return;
         }
         Log.i(TAG, "Setting rating to "+rating+" of recipe (ID:"+recipe.id+")...");
-        sqlRecipe.setRating(rating);
+        sqlRecipe.setRating(recipe, rating);
         recipe.rating = rating;
         Log.i(TAG, "Rating successfully set!");
     }

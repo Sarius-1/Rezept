@@ -168,11 +168,11 @@ public class Recipe implements Parcelable {
             db.execSQL("DELETE FROM "+tableName+" WHERE ID = ?", new Object[]{modelObj.id});
         }
 
-        public void setRating(int rating){
+        public void setRating(Recipe recipe, int rating){
             ContentValues values = new ContentValues();
             values.put("Rating", rating);
             database.getWritableDatabase().update(tableName, values, "ID = ?",
-                    new String[]{String.valueOf(rating)});
+                    new String[]{String.valueOf(recipe.id)});
         }
 
         @Override

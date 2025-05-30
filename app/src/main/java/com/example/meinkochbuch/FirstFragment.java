@@ -21,9 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+
+    @Getter
+    @Setter
+    private Set<Recipe> recipes;
+
+    @Getter @Setter
+    private RecipeAdapter adapter;
 
     @Override
     public View onCreateView(
@@ -38,8 +48,8 @@ public class FirstFragment extends Fragment {
         NavController navController = navHostFragment.getNavController();
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
-        Set<Recipe> recipes= RecipeManager.getInstance().filter(FilterCriteria.any());
-        RecipeAdapter adapter = new RecipeAdapter(getContext(), new ArrayList<>(recipes), navController);
+        recipes= RecipeManager.getInstance().filter(FilterCriteria.any());
+        adapter = new RecipeAdapter(getContext(), new ArrayList<>(recipes), navController);
         Log.d("FirstFragment", "Recipes: " + recipes);
         binding.recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recipeRecyclerView.setAdapter(adapter);
@@ -55,9 +65,9 @@ public class FirstFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Set<Recipe> newRecipes=RecipeManager.getInstance().filter(FilterCriteria.nameContains(newText));
-                RecipeAdapter newAdapter = new RecipeAdapter(getContext(), new ArrayList<>(newRecipes), navController);
-                binding.recipeRecyclerView.setAdapter(newAdapter);
+                FirstFragment.this.setRecipes(RecipeManager.getInstance().filter(FilterCriteria.nameContains(newText)));
+                FirstFragment.this.setAdapter(new RecipeAdapter(getContext(), new ArrayList<>(FirstFragment.this.getRecipes()), navController));
+                binding.recipeRecyclerView.setAdapter(adapter);
                 return true;
             }
         });

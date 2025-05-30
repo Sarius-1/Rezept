@@ -1,6 +1,5 @@
 package com.example.meinkochbuch;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -54,7 +53,7 @@ public class CreateRezept extends Fragment {
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
                     selectedImageUri = result.getData().getData();
                     imageView.setImageURI(selectedImageUri);
                 }
@@ -79,8 +78,7 @@ public class CreateRezept extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_rezept, container, false);
 
         ingredientContainer = rootView.findViewById(R.id.container_zutaten);
@@ -98,7 +96,7 @@ public class CreateRezept extends Fragment {
         fabBildAuswaehlen.setOnClickListener(v -> showImagePickerDialog());
         btnSaveRecipe.setOnClickListener(v -> saveRecipe(rootView));
 
-        addIngredientView(inflater); // Standard-Zutatfeld
+        addIngredientView(inflater);
 
         return rootView;
     }
@@ -113,9 +111,7 @@ public class CreateRezept extends Fragment {
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 Unit unit = getItem(position);
-                if (unit != null) {
-                    ((TextView) view).setText(unit.getLocalizedName());
-                }
+                if (unit != null) ((TextView) view).setText(unit.getLocalizedName());
                 return view;
             }
 
@@ -124,9 +120,7 @@ public class CreateRezept extends Fragment {
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 Unit unit = getItem(position);
-                if (unit != null) {
-                    ((TextView) view).setText(unit.getLocalizedName());
-                }
+                if (unit != null) ((TextView) view).setText(unit.getLocalizedName());
                 return view;
             }
         };
@@ -143,12 +137,33 @@ public class CreateRezept extends Fragment {
         try {
             String name = getInputText(rootView, R.id.et_rezept_name);
             String description = getInputText(rootView, R.id.et_zubereitung);
-            int portions = parseInputInteger(rootView, R.id.et_portionen);
-            int time = parseInputInteger(rootView, R.id.et_zubereitungszeit);
+            String strPortions = getInputText(rootView, R.id.et_portionen);
+            String strTime = getInputText(rootView, R.id.et_zubereitungszeit);
+
+            if (name.isEmpty()) {
+                showValidationError(getString(R.string.validation_recipe_name_missing));
+                return;
+            }
+            if (strPortions.isEmpty()) {
+                showValidationError(getString(R.string.validation_portions_missing));
+                return;
+            }
+            if (strTime.isEmpty()) {
+                showValidationError(getString(R.string.validation_time_missing));
+                return;
+            }
+            if (description.isEmpty()) {
+                showValidationError(getString(R.string.validation_description_missing));
+                return;
+            }
+
+            int portions = Integer.parseInt(strPortions);
+            int time = Integer.parseInt(strTime);
 
             RecipeManager manager = RecipeManager.getInstance();
             Recipe recipe = manager.createRecipe(name, time, portions, description);
 
+            boolean hasValidIngredient = false;
             for (int i = 0; i < ingredientContainer.getChildCount(); i++) {
                 View ingredientView = ingredientContainer.getChildAt(i);
                 if (ingredientView == null) continue;
@@ -165,7 +180,13 @@ public class CreateRezept extends Fragment {
                 Ingredient ingredient = manager.tryRegisterIngredient(ingredientName);
                 if (ingredient != null) {
                     manager.addIngredient(recipe, ingredient, amount, unit);
+                    hasValidIngredient = true;
                 }
+            }
+
+            if (!hasValidIngredient) {
+                showValidationError(getString(R.string.validation_ingredient_missing));
+                return;
             }
 
             if (cbVegan.isChecked()) manager.addCategory(recipe, Category.VEGAN);
@@ -183,6 +204,7 @@ public class CreateRezept extends Fragment {
             manager.setRating(recipe, 0);
 
             Toast.makeText(requireContext(), getString(R.string.toast_recipe_saved), Toast.LENGTH_SHORT).show();
+            resetForm();
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(R.id.FirstFragment);
 
@@ -190,6 +212,29 @@ public class CreateRezept extends Fragment {
             Toast.makeText(requireContext(), getString(R.string.toast_recipe_save_error, e.getMessage()), Toast.LENGTH_LONG).show();
             Log.e("CreateRezept", "Error while saving recipe", e);
         }
+    }
+
+    private void showValidationError(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void resetForm() {
+        ((TextInputEditText) requireView().findViewById(R.id.et_rezept_name)).setText("");
+        ((TextInputEditText) requireView().findViewById(R.id.et_zubereitung)).setText("");
+        ((TextInputEditText) requireView().findViewById(R.id.et_zubereitungszeit)).setText("");
+        ((TextInputEditText) requireView().findViewById(R.id.et_portionen)).setText("");
+
+        ingredientContainer.removeAllViews();
+        addIngredientView(getLayoutInflater());
+
+        cbVegan.setChecked(false);
+        cbVegetarian.setChecked(false);
+        cbGlutenFree.setChecked(false);
+        cbLactoseFree.setChecked(false);
+
+        selectedImageUri = null;
+        tempImageUri = null;
+        imageView.setImageDrawable(null);
     }
 
     private void showImagePickerDialog() {
@@ -223,10 +268,5 @@ public class CreateRezept extends Fragment {
     private String getEditText(@NonNull View view, int id) {
         EditText editText = view.findViewById(id);
         return editText != null && editText.getText() != null ? editText.getText().toString().trim() : "";
-    }
-
-    private int parseInputInteger(@NonNull View rootView, int id) throws NumberFormatException {
-        String value = getInputText(rootView, id);
-        return Integer.parseInt(value);
     }
 }

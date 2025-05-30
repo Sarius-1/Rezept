@@ -16,6 +16,11 @@
     <string name="dialog_select_image_title">Bild auswählen</string>
     <string name="option_gallery">Galerie</string>
     <string name="option_camera">Kamera</string>
+    <string name="validation_recipe_name_missing">Rezeptname fehlt</string>
+    <string name="validation_portions_missing">Portionen fehlen</string>
+    <string name="validation_time_missing">Zubereitungszeit fehlt</string>
+    <string name="validation_description_missing">Zubereitungsbeschreibung fehlt</string>
+    <string name="validation_ingredient_missing">Mindestens eine gültige Zutat muss eingegeben werden</string>
 
     <!-- Fragment CreateRezept – Layout Strings -->
     <string name="title_create_recipe">Neues Rezept erstellen</string>

@@ -50,11 +50,13 @@ public class FirstFragment extends Fragment {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         recipes= RecipeManager.getInstance().filter(FilterCriteria.any());
         adapter = new RecipeAdapter(getContext(), new ArrayList<>(recipes), navController);
-        Log.d("FirstFragment", "Recipes: " + recipes);
         binding.recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recipeRecyclerView.setAdapter(adapter);
         binding.fabAddRecipe.setOnClickListener(v -> {
             navController.navigate(R.id.createRezept);
+        });
+        binding.btnFilter.setOnClickListener(v -> {
+            navController.navigate(R.id.filterFragment);
         });
         binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override

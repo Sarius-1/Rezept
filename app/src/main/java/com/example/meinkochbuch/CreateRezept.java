@@ -131,6 +131,9 @@ public class CreateRezept extends Fragment {
             if (cbGlutenFree.isChecked()) manager.addCategory(recipe, Category.GLUTEN_FREE);
             if (cbLactoseFree.isChecked()) manager.addCategory(recipe, Category.LACTOSE_FREE);
 
+            // standardmäßig ein Rating von Null hinzufügen
+            manager.setRating(recipe, 0);
+
             Toast.makeText(requireContext(), getString(R.string.toast_recipe_saved), Toast.LENGTH_SHORT).show();
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(R.id.FirstFragment);

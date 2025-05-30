@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private LinkedList<SQLModel<?>> tableManagers = new LinkedList<>();
     public DatabaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 3);
+        super(context, DATABASE_NAME, null, 4);
     }
 
     public void addTableManager(SQLModel<?> model){
@@ -46,17 +46,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("Database", "Upgrading DB from v"+oldVersion+" to v"
                 +newVersion+" and dropping everything");
-        for(SQLModel<?> model : tableManagers){
-            if(!tableExists(db, model.getTableName()))continue;
-            db.execSQL("DROP TABLE "+model.getTableName());
+        db.beginTransaction();
+        try {
+            Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'", null);
+            while (cursor.moveToNext()) {
+                String tableName = cursor.getString(0);
+                db.delete(tableName, null, null);
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+            Log.i("Database", "Dropping done!");
         }
-    }
-
-    private boolean tableExists(SQLiteDatabase db, String table){
-        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", new String[]{table});
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        return exists;
     }
 
     // -- Database Interaction --

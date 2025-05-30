@@ -54,10 +54,10 @@ public class ShoppingListItem {
                     "CREATE TABLE "+tableName+" (",
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT,",
                     "IngredientID INTEGER,",
-                    "Amount INTEGER",
+                    "Amount INTEGER,",
                     "Unit TEXT,",
                     "Checked INTEGER DEFAULT 0,",
-                    "FOREIGN KEY (IngredientID) REFERENCES Ingredient(ID)", ")"
+                    "FOREIGN KEY (IngredientID) REFERENCES Ingredient(ID) ON DELETE CASCADE", ")"
             );
         }
 

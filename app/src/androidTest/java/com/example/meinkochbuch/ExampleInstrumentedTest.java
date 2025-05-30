@@ -72,7 +72,8 @@ public class ExampleInstrumentedTest {
         recipe = RecipeManager.getInstance().createRecipe("Torte", 60, 3,  "Some cake");
         RecipeManager.getInstance().addIngredient(recipe, flour, 150, Unit.GRAM);
         RecipeManager.getInstance().addCategory(recipe, Category.VEGETARIAN);
-        assert recipe.isCategorizedAs(Category.VEGETARIAN);
+        RecipeManager.getInstance().addCategory(recipe, Category.GLUTEN_FREE);
+        assert recipe.isCategorizedAs(Category.VEGETARIAN, Category.GLUTEN_FREE);
 
         RecipeManager.getInstance().addCategory(recipe, Category.LACTOSE_FREE);
         Set<Recipe> filter = RecipeManager.getInstance().filter(FilterCriteria.categorizes(Category.VEGETARIAN, Category.LACTOSE_FREE),

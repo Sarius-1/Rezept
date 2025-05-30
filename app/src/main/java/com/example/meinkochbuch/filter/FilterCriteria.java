@@ -20,6 +20,19 @@ public interface FilterCriteria {
     }
 
     /**
+     * Builds a filter criteria which checks if a recipes name equals the given text part.
+     * @param name The name checked against the recipes name.
+     * @param ignoreCase Whether to ignore case sensitivity.
+     * @return The build filter.
+     */
+    static FilterCriteria nameEquals(String name, boolean ignoreCase){
+        return recipe -> ignoreCase ? recipe.getName().equalsIgnoreCase(name) : recipe.getName().equals(name);
+    }
+    static FilterCriteria nameEquals(String name){
+        return nameEquals(name, true);
+    }
+
+    /**
      * Builds a filter criteria which checks if a recipe includes all given ingredients.
      * @param ingredients The ingredients which must be included in the recipe.
      * @return The build filter.

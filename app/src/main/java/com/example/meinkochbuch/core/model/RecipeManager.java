@@ -1,10 +1,12 @@
 package com.example.meinkochbuch.core.model;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import com.example.meinkochbuch.filter.FilterCriteria;
 import com.example.meinkochbuch.io.DatabaseHelper;
+import com.example.meinkochbuch.io.ImageDatabase;
 import com.example.meinkochbuch.util.Verify;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import lombok.Getter;
@@ -35,7 +38,7 @@ import lombok.Getter;
  * All use cases regarding recipe, ingredients, etc. are managed inside this class and shouldn't be manually changed outside.
  * </p>
  */
-public class RecipeManager {
+public final class RecipeManager {
 
     private static final String TAG = "RecipeManager";
 
@@ -286,7 +289,10 @@ public class RecipeManager {
      * @param name The name of the recipes to get.
      * @param ignoreCase Whether to ignore case sensitivity.
      * @return A collection of all recipes that have the equal name (or similar if {@code ignoreCase} is {@code true}).
+     * @deprecated This will shouldn't be used and might get removed soon. Use {@link #filter(FilterCriteria...)} 
+     * with {@link FilterCriteria#nameEquals(String)}.
      */
+    @Deprecated()
     public Collection<Recipe> getRecipesByName(@NotNull String name, boolean ignoreCase){
         if(RECIPE_BY_ID.isEmpty())return Collections.emptyList();
         ArrayList<Recipe> list = new ArrayList<>(2);
@@ -296,6 +302,7 @@ public class RecipeManager {
         }
         return list;
     }
+    @Deprecated
     public Collection<Recipe> getRecipesByName(@NotNull String name){
         return getRecipesByName(name, false);
     }
@@ -366,9 +373,19 @@ public class RecipeManager {
             return;
         }
         Log.i(TAG, "Setting rating to "+rating+" of recipe (ID:"+recipe.id+")...");
-        sqlRecipe.setRating(rating);
+        sqlRecipe.setRating(recipe, rating);
         recipe.rating = rating;
         Log.i(TAG, "Rating successfully set!");
+    }
+
+    //Images
+
+    public boolean setImage(@NotNull Recipe recipe, @NotNull Uri imageUri){
+        if(!RECIPE_BY_ID.containsKey(recipe.id)){
+            Log.e(TAG, "Tried to add image to recipe (ID:"+recipe.id+") but it isn't registered!");
+            return false;
+        }
+        return ImageDatabase.getInstance().saveFile(imageUri, "recipe"+recipe.id);
     }
 
     // -- Categories --

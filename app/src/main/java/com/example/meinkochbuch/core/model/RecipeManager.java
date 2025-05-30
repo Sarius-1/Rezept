@@ -529,6 +529,9 @@ public final class RecipeManager {
         return set;
     }
 
+    public Collection<Ingredient> getAllIngredients() {
+        return INGREDIENTS_BY_LOWERCASE_NAME.values();
+    }
 }
 
 

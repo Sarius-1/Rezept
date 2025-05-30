@@ -18,22 +18,15 @@
             android:text="Auf Zutaten filtern:" />
 
         <LinearLayout
+            android:id="@+id/zutatenFilterContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinnerCategory2"
-                android:layout_width="281dp"
-                android:layout_height="35dp" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+        <Button
+            android:id="@+id/buttonAddZutat"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Filter für Zutat hinzufügen"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,21 +40,19 @@
             android:weightSum="2"
             android:gravity="center_vertical">
 
-            <EditText
-                android:id="@+id/editTextRatingMin"
+            <Spinner
+                android:id="@+id/spinnerRatingMin"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:inputType="number"
                 android:layout_height="wrap_content"
-                android:hint="Min" />
+                android:spinnerMode="dropdown" />
 
-            <EditText
-                android:id="@+id/editTextRatingMax"
+            <Spinner
+                android:id="@+id/spinnerRatingMax"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:inputType="number"
                 android:layout_height="wrap_content"
-                android:hint="Max" />
+                android:spinnerMode="dropdown" />
         </LinearLayout>
 
         <TextView
@@ -98,12 +89,37 @@
             android:layout_height="wrap_content"
             android:text="Nach Kategorien FIltern:" />
 
-        <Spinner
-            android:id="@+id/spinnerCategory"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp" />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical">
 
-        <!-- 🎛 Buttons -->
+            <CheckBox
+                android:id="@+id/checkbox_vegan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegan" />
+
+            <CheckBox
+                android:id="@+id/checkbox_vegetarian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetarisch" />
+
+            <CheckBox
+                android:id="@+id/checkbox_gluten_free"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Glutenfrei" />
+
+            <CheckBox
+                android:id="@+id/checkbox_lactose_free"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Laktosefrei" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:orientation="horizontal"

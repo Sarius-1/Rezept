@@ -142,7 +142,7 @@ public class RezeptFragment extends Fragment {
         StringBuilder zutatenText = new StringBuilder();
         float faktor = portionen / (float) standardPortionen;
         for (RecipeIngredient ri : currentRecipe.getIngredients()) {
-            float menge = ri.getAmount() * faktor;
+            double menge = ri.getAmount() * faktor;
             zutatenText.append("- ")
                     .append(String.format(Locale.getDefault(), "%.2f", menge)).append(" ")
                     .append(ri.getUnit().getLocalizedName()).append(" ")

@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_rezept"
             app:destination="@id/rezept" />
+        <action
+            android:id="@+id/action_FirstFragment_to_filterFragment2"
+            app:destination="@id/filterFragment" />
     </fragment>
     <fragment
         android:id="@+id/rezept"
@@ -36,5 +39,14 @@
         android:name="com.example.meinkochbuch.EinkaufslisteFragment"
         android:label="fragment_einkaufsliste"
         tools:layout="@layout/fragment_einkaufsliste">
+    </fragment>
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="com.example.meinkochbuch.FilterFragment"
+        android:label="fragment_filter"
+        tools:layout="@layout/fragment_filter" >
+        <action
+            android:id="@+id/action_filterFragment2_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

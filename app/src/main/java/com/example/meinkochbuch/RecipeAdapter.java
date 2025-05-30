@@ -1,6 +1,7 @@
 package com.example.meinkochbuch;
 
 import android.content.Context;
+import android.graphics.Picture;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,13 +39,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
         Recipe recipe = recipeList.get(position);
         holder.textTitle.setText(recipe.getName());
-        holder.rating.setText(String.valueOf(recipe.getRating()));
+        setStars(holder, recipe.getRating());
         holder.button.setOnClickListener(v -> {
             Recipe recipeToSend = recipeList.get(position);
             FirstFragmentDirections.ActionFirstFragmentToRezept action =
                     FirstFragmentDirections.actionFirstFragmentToRezept(recipeToSend);
             navController.navigate(action);
         });
+    }
+
+    private void setStars(RecipeViewHolder holder, int rating) {
+        for (int i = 1; i <= 5; i++) {
+            holder.stars[i - 1].setImageResource(
+                    i <= rating ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off
+            );
+        }
     }
 
     @Override
@@ -55,14 +64,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
         TextView textTitle;
 
-        private TextView rating;
+        ImageView[] stars = new ImageView[5];
 
         Button button;
 
         public RecipeViewHolder(View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);
-            rating = itemView.findViewById(R.id.textDescription);
+            stars[0] = itemView.findViewById(R.id.oneStar);
+            stars[1] = itemView.findViewById(R.id.twoStar);
+            stars[2] = itemView.findViewById(R.id.threeStar);
+            stars[3] = itemView.findViewById(R.id.fourStar);
+            stars[4] = itemView.findViewById(R.id.fiveStar);
             button = itemView.findViewById(R.id.button);
         }
 

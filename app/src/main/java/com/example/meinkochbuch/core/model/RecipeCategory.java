@@ -48,7 +48,7 @@ public class RecipeCategory {
                     "CREATE TABLE "+tableName+" (",
                     "RecipeID INTEGER,",
                     "Name TEXT,",
-                    "PRIMARY KEY (RecipeID),",
+                    "PRIMARY KEY (RecipeID, Name),",
                     "FOREIGN KEY (RecipeID) REFERENCES Recipe(ID) ON DELETE CASCADE", ")"
             );
         }

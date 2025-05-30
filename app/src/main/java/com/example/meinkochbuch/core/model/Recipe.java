@@ -39,6 +39,27 @@ public class Recipe implements Parcelable {
     List<RecipeIngredient> ingredients = new ArrayList<>();
     Set<RecipeCategory> categories = new HashSet<>();
 
+    protected Recipe(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        processingTime = in.readInt();
+        portions = in.readInt();
+        rating = in.readInt();
+        guideText = in.readString();
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
     public RecipeIngredient getContainingIngredient(Ingredient ingredient){
         for(RecipeIngredient in : ingredients)if(in.ingredient.equals(ingredient))return in;
         return null;
@@ -98,7 +119,12 @@ public class Recipe implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
-
+        parcel.writeLong(id);
+        parcel.writeString(name);
+        parcel.writeInt(processingTime);
+        parcel.writeInt(portions);
+        parcel.writeInt(rating);
+        parcel.writeString(guideText);
     }
 
 

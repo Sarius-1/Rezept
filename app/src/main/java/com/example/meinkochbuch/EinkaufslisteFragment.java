@@ -23,10 +23,7 @@ import com.example.meinkochbuch.databinding.FragmentEinkaufslisteBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment, das die Einkaufsliste anzeigt und um ein Eingabeformular
- * (Menge | Einheit | Zutat) erweitert wurde – nun per ViewBinding implementiert.
- */
+
 public class EinkaufslisteFragment extends Fragment {
 
     private static final String TAG = "EinkaufslisteFragment";
@@ -137,10 +134,6 @@ public class EinkaufslisteFragment extends Fragment {
         binding = null;
     }
 
-    /**
-     * Lädt die aktuelle Einkaufsliste aus RecipeManager und informiert den Adapter.
-     * Kann auch statisch von anderen Klassen (z.B. RezeptFragment) aufgerufen werden.
-     */
     public static void refreshShoppingList() {
         if (adapter == null || einkaufsliste == null) {
             Log.w(TAG, "refreshShoppingList: Adapter oder Liste noch nicht initialisiert.");

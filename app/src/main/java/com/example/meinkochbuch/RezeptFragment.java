@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -118,6 +119,8 @@ public class RezeptFragment extends Fragment {
                     if (entry.getKey().isChecked()) {
                         RecipeIngredient ri = entry.getValue();
                         manager.addShoppingListItem(ri.getIngredient(),ri.getAmount(),ri.getUnit());
+                        entry.getKey().setChecked(false);
+                        Toast.makeText(getContext(), "Zutaten wurden zur Einkaufsliste hinzugefügt", Toast.LENGTH_SHORT).show();
 
                     }
                 }

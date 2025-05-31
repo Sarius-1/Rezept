@@ -114,16 +114,20 @@ public class RezeptFragment extends Fragment {
 
             setupRatingButtons(view);
 
+            // Im RezeptFragment nach dem Hinzufügen zur Einkaufsliste:
             addToShoppingListButton.setOnClickListener(v -> {
                 for (Map.Entry<CheckBox, RecipeIngredient> entry : checkedZutaten.entrySet()) {
                     if (entry.getKey().isChecked()) {
                         RecipeIngredient ri = entry.getValue();
                         manager.addShoppingListItem(ri.getIngredient(),ri.getAmount(),ri.getUnit());
                         entry.getKey().setChecked(false);
-                        Toast.makeText(getContext(), "Zutaten wurden zur Einkaufsliste hinzugefügt", Toast.LENGTH_SHORT).show();
-
                     }
                 }
+                EinkaufslisteFragment.refreshShoppingList();
+                Toast.makeText(getContext(), "Zutaten wurden zur Einkaufsliste hinzugefügt", Toast.LENGTH_SHORT).show();
+
+                // Falls du eine Referenz zum EinkaufslisteFragment hast:
+                // einkaufslisteFragment.refreshShoppingList();
             });
         }
 

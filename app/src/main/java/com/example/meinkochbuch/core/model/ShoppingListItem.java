@@ -37,6 +37,10 @@ public class ShoppingListItem {
                 ", checked=" + checked +
                 '}';
     }
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+        RecipeManager.getInstance().setShoppingListItemChecked(this, checked);
+    }
 
     static class SQLShoppingListItem extends SQLModel<ShoppingListItem> {
         SQLShoppingListItem(DatabaseHelper database) {

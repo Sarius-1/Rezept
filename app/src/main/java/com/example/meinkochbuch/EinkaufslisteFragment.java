@@ -1,72 +1,123 @@
 package com.example.meinkochbuch;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.ShoppingListItem;
+import com.example.meinkochbuch.core.model.Unit;
+import com.example.meinkochbuch.databinding.FragmentEinkaufslisteBinding;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
+/**
+ * Fragment, das die Einkaufsliste anzeigt und um ein Eingabeformular
+ * (Menge | Einheit | Zutat) erweitert wurde – nun per ViewBinding implementiert.
+ */
 public class EinkaufslisteFragment extends Fragment {
 
     private static final String TAG = "EinkaufslisteFragment";
-    private Collection<ShoppingListItem> einkaufsliste;
+
+    // Adapter und Liste statisch, damit andere Klassen (z.B. RezeptFragment) sie aktualisieren können
     private static EinkaufsAdapter adapter;
-    private LinkedList<ShoppingListItem> selectedItems = new LinkedList<>();
+    private static List<ShoppingListItem> einkaufsliste;
 
+    // Binding-Instanz
+    private FragmentEinkaufslisteBinding binding;
+
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_einkaufsliste, container, false);
+        // 1) ViewBinding initialisieren
+        binding = FragmentEinkaufslisteBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        ListView listView = view.findViewById(R.id.list_einkaufsliste);
-        Button deleteButton = view.findViewById(R.id.button_delete_selected);
+        // 2) Einkaufsliste aus RecipeManager laden (vorab aus Datenbank)
+        einkaufsliste = new ArrayList<>(RecipeManager.getInstance().getShoppingList());
 
-        // Debug: Einkaufsliste laden und Größe prüfen
-        Log.d(TAG, "Fragment onCreateView aufgerufen");
-        einkaufsliste = RecipeManager.getInstance().getShoppingList();
-        Log.d(TAG, "Einkaufsliste Größe beim Laden: " + einkaufsliste.size());
-        Log.d(TAG, "RecipeManager Instanz: " + RecipeManager.getInstance().toString());
+        // 3) Adapter initialisieren und an RecyclerView anhängen
+        adapter = new EinkaufsAdapter(einkaufsliste);
+        binding.recyclerViewItems.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerViewItems.setAdapter(adapter);
 
-        // Debug: Inhalt der Liste ausgeben
-        for (ShoppingListItem item : einkaufsliste) {
-            Log.d(TAG, "Item: " + item.getIngredient().getName() + " - " + item.getAmount());
-        }
+        // 4) „Löschen“-Button: markierte Einträge in der Shopping-Liste entfernen
+        binding.buttonDeleteSelected.setOnClickListener(v -> adapter.deleteCheckedItems());
 
-        adapter = new EinkaufsAdapter(getContext(), einkaufsliste, selectedItems);
-        listView.setAdapter(adapter);
+        // 5) Spinner mit allen Einheiten („Unit“) befüllen
+        ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                java.util.Arrays.stream(Unit.values())
+                        .map(Unit::getLocalizedName)
+                        .toArray(String[]::new)
+        );
+        unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerEinheit.setAdapter(unitAdapter);
 
-        // Debug: Adapter-Count prüfen
-        Log.d(TAG, "Adapter Count nach setAdapter: " + adapter.getCount());
+        // 6) „Hinzufügen“-Button: neues ShoppingListItem anlegen
+        binding.buttonAddItem.setOnClickListener(v -> {
+            String amountText = binding.etMenge.getText().toString().trim();
+            String nameText   = binding.etZutat.getText().toString().trim();
 
-        deleteButton.setOnClickListener(v -> {
-            List<ShoppingListItem> toRemove = new ArrayList<>(selectedItems);
-            Log.d(TAG, "Zu löschende Items: " + toRemove.size());
-
-            for (ShoppingListItem item : toRemove) {
-                RecipeManager.getInstance().removeShoppingListItem(item);
+            if (TextUtils.isEmpty(amountText)) {
+                Toast.makeText(requireContext(), "Bitte Menge eingeben", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (TextUtils.isEmpty(nameText)) {
+                Toast.makeText(requireContext(), "Bitte Zutat eingeben", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            selectedItems.clear();
-            adapter.refreshData();
+            double amount;
+            try {
+                amount = Double.parseDouble(amountText);
+                if (amount <= 0) {
+                    Toast.makeText(requireContext(), "Menge muss größer 0 sein", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(requireContext(), "Ungültige Zahl", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // Debug: Nach dem Löschen
-            Log.d(TAG, "Adapter Count nach Löschen: " + adapter.getCount());
+
+            String selectedLabel = (String) binding.spinnerEinheit.getSelectedItem();
+            Unit selectedUnit = null;
+            for (Unit u : Unit.values()) {
+                if (u.getLocalizedName().equals(selectedLabel)) {
+                    selectedUnit = u;
+                    break;
+                }
+            }
+            Ingredient ingredient = RecipeManager.getInstance().tryRegisterIngredient(nameText);
+
+            RecipeManager.getInstance()
+                    .addShoppingListItem(ingredient, amount, selectedUnit);
+
+            refreshShoppingList();
+
+            binding.etMenge.setText("");
+            binding.etZutat.setText("");
+
+            // 6.h) Bestätigung per Toast
+            Toast.makeText(requireContext(),
+                    "Zutat „" + nameText + "“ (" + amount + " " + selectedUnit.getLocalizedName() + ") hinzugefügt",
+                    Toast.LENGTH_SHORT).show();
         });
 
         return view;
@@ -75,38 +126,29 @@ public class EinkaufslisteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume - Fragment wird wieder sichtbar");
-        if (adapter != null) {
-            Log.d(TAG, "onResume - Aktualisiere Adapter");
-            adapter.refreshData();
-        }
+        Log.d(TAG, "onResume – Adapter aktualisieren");
+        refreshShoppingList();
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && adapter != null) {
-            Log.d(TAG, "Fragment ist jetzt sichtbar - aktualisiere Liste");
-            adapter.refreshData();
-        }
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Wichtig: Binding-Referenz freigeben, um Memory Leaks zu vermeiden
+        binding = null;
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden && adapter != null) {
-            Log.d(TAG, "Fragment ist nicht mehr versteckt - aktualisiere Liste");
-            adapter.refreshData();
-        }
-    }
-
-    // Öffentliche Methode zum Aktualisieren der Liste
+    /**
+     * Lädt die aktuelle Einkaufsliste aus RecipeManager und informiert den Adapter.
+     * Kann auch statisch von anderen Klassen (z.B. RezeptFragment) aufgerufen werden.
+     */
     public static void refreshShoppingList() {
-        Log.d(TAG, "refreshShoppingList aufgerufen");
-        if (adapter != null) {
-            Collection<ShoppingListItem> currentList = RecipeManager.getInstance().getShoppingList();
-            Log.d(TAG, "Aktuelle Liste hat " + currentList.size() + " Elemente");
-            adapter.refreshData();
+        if (adapter == null || einkaufsliste == null) {
+            Log.w(TAG, "refreshShoppingList: Adapter oder Liste noch nicht initialisiert.");
+            return;
         }
+        Log.d(TAG, "refreshShoppingList: Lade aktuelle Einträge");
+        einkaufsliste.clear();
+        einkaufsliste.addAll(RecipeManager.getInstance().getShoppingList());
+        adapter.notifyDataSetChanged();
     }
 }

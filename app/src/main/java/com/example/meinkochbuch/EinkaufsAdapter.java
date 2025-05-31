@@ -1,67 +1,88 @@
 package com.example.meinkochbuch;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.ShoppingListItem;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 
-public class EinkaufsAdapter extends ArrayAdapter<ShoppingListItem> {
+public class EinkaufsAdapter extends RecyclerView.Adapter<EinkaufsAdapter.ViewHolder> {
 
-    private static final String TAG = "EinkaufsAdapter";
-    private LinkedList<ShoppingListItem> selectedItems;
+    private final List<ShoppingListItem> items;
 
-    public EinkaufsAdapter(Context context, Collection<ShoppingListItem> items, LinkedList<ShoppingListItem> selectedItem) {
-        super(context, 0, new ArrayList<>(items));
-        this.selectedItems = selectedItem;
+    public EinkaufsAdapter(List<ShoppingListItem> items) {
+        this.items = items;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        EditText anzahl;
+        TextView name;
+        CheckBox checkbox;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            anzahl = itemView.findViewById(R.id.anzahl);
+            name = itemView.findViewById(R.id.item_name);
+            checkbox = itemView.findViewById(R.id.item_checkbox);
+        }
+    }
+
+    @NonNull
+    @Override
+    public EinkaufsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_einkauf, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public void onBindViewHolder(@NonNull EinkaufsAdapter.ViewHolder holder, int position) {
+        ShoppingListItem item = items.get(position);
 
-        ShoppingListItem item = getItem(position);
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext())
-                    .inflate(R.layout.list_item_einkauf, parent, false);
-        }
+        holder.anzahl.setText(String.valueOf(item.getAmount()));
+        holder.name.setText(item.getIngredient().getName());
+        holder.checkbox.setChecked(item.isChecked());
 
-        TextView mengeView = convertView.findViewById(R.id.item_amount);
-        TextView nameView = convertView.findViewById(R.id.item_name);
-        CheckBox checkBox = convertView.findViewById(R.id.item_checkbox);
-
-        mengeView.setText(String.valueOf(item.getAmount()+" "+item.getUnit().getLocalizedName()));
-        nameView.setText(item.getIngredient().getName());
-        checkBox.setChecked(selectedItems.contains(item));
-
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                selectedItems.add(item);
-            } else {
-                selectedItems.remove(item);
-            }
+        holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            item.setChecked(isChecked);
         });
 
-        return convertView;
+        holder.anzahl.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                try {
+                    double value = Double.parseDouble(holder.anzahl.getText().toString());
+                    RecipeManager.getInstance().setShoppingListItemAmount(item, value);
+                } catch (NumberFormatException e) {
+                    holder.anzahl.setError("Ungültige Zahl");
+                }
+            }
+        });
     }
 
-    // Methode zum Aktualisieren der Daten
-    public void refreshData() {
-        Collection<ShoppingListItem> newData = RecipeManager.getInstance().getShoppingList();
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
 
-        clear();
-        addAll(newData);
+    public void deleteCheckedItems() {
+        Iterator<ShoppingListItem> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            ShoppingListItem item = iterator.next();
+            if (item.isChecked()) {
+                RecipeManager.getInstance().removeShoppingListItem(item);
+                iterator.remove();
+            }
+        }
         notifyDataSetChanged();
-
     }
 }

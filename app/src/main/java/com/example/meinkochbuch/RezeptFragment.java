@@ -123,7 +123,7 @@ public class RezeptFragment extends Fragment {
                         entry.getKey().setChecked(false);
                     }
                 }
-                EinkaufslisteFragment.refreshShoppingList();
+                //EinkaufslisteFragment.refreshShoppingList();
                 Toast.makeText(getContext(), "Zutaten wurden zur Einkaufsliste hinzugefügt", Toast.LENGTH_SHORT).show();
 
                 // Falls du eine Referenz zum EinkaufslisteFragment hast:

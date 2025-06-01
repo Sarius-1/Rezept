@@ -70,6 +70,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         Button button;
 
+        ImageView imageRezept;
+
         public RecipeViewHolder(View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);
@@ -79,6 +81,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             stars[3] = itemView.findViewById(R.id.fourStar);
             stars[4] = itemView.findViewById(R.id.fiveStar);
             button = itemView.findViewById(R.id.button);
+            imageRezept = itemView.findViewById(R.id.imageRezept);
         }
 
     }

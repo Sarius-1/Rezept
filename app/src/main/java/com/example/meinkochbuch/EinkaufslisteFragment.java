@@ -28,11 +28,9 @@ public class EinkaufslisteFragment extends Fragment {
 
     private static final String TAG = "EinkaufslisteFragment";
 
-    // Adapter und Liste statisch, damit andere Klassen (z.B. RezeptFragment) sie aktualisieren können
     private static EinkaufsAdapter adapter;
     private static List<ShoppingListItem> einkaufsliste;
 
-    // Binding-Instanz
     private FragmentEinkaufslisteBinding binding;
 
     @Nullable
@@ -55,7 +53,7 @@ public class EinkaufslisteFragment extends Fragment {
         // 4) „Löschen“-Button: markierte Einträge in der Shopping-Liste entfernen
         binding.buttonDeleteSelected.setOnClickListener(v -> adapter.deleteCheckedItems());
 
-        // 5) Spinner mit allen Einheiten („Unit“) befüllen
+
         ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
@@ -66,7 +64,7 @@ public class EinkaufslisteFragment extends Fragment {
         unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerEinheit.setAdapter(unitAdapter);
 
-        // 6) „Hinzufügen“-Button: neues ShoppingListItem anlegen
+
         binding.buttonAddItem.setOnClickListener(v -> {
             String amountText = binding.etMenge.getText().toString().trim();
             String nameText   = binding.etZutat.getText().toString().trim();
@@ -103,6 +101,7 @@ public class EinkaufslisteFragment extends Fragment {
             }
             Ingredient ingredient = RecipeManager.getInstance().tryRegisterIngredient(nameText);
 
+            assert ingredient != null;
             RecipeManager.getInstance()
                     .addShoppingListItem(ingredient, amount, selectedUnit);
 
@@ -130,7 +129,6 @@ public class EinkaufslisteFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Wichtig: Binding-Referenz freigeben, um Memory Leaks zu vermeiden
         binding = null;
     }
 
@@ -142,6 +140,7 @@ public class EinkaufslisteFragment extends Fragment {
         Log.d(TAG, "refreshShoppingList: Lade aktuelle Einträge");
         einkaufsliste.clear();
         einkaufsliste.addAll(RecipeManager.getInstance().getShoppingList());
+        Log.d(TAG, "refreshShoppingList: Neue Liste: " + einkaufsliste);
         adapter.notifyDataSetChanged();
     }
 }

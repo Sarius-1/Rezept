@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,66 +23,65 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:srcCompat="@drawable/ic_launcher_background" />
 
-        <!-- 2) Rezeptname darunter, zentriert, kleiner Abstand zum Bild -->
+        <!-- 2) Rezeptname links unter dem Bild -->
         <TextView
             android:id="@+id/text_rezept_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Rezeptname"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            app:layout_constraintTop_toBottomOf="@id/image_rezept"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_rezept" />
+            app:layout_constraintEnd_toStartOf="@id/button_add_to_shopping_list"
+            app:layout_constraintHorizontal_bias="0" />
 
-        <!-- 3) Button „Zur Einkaufsliste“ rechts oben neben dem Namen -->
+        <!-- 3) Button „Zur Einkaufsliste“ rechts unter dem Bild -->
         <Button
             android:id="@+id/button_add_to_shopping_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Zur Einkaufsliste"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
+            android:text="Zur Einkaufsliste"
             app:layout_constraintTop_toBottomOf="@id/image_rezept"
+            app:layout_constraintStart_toEndOf="@id/text_rezept_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@id/text_rezept_name" />
+            android:layout_marginTop="12dp" />
 
-        <!-- 4) Zubereitungszeit darunter, Linksbündig -->
+        <!-- 4) Zubereitungszeit direkt unter Rezeptname/Button -->
         <TextView
             android:id="@+id/text_zeit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Zubereitungszeit: XX Min"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintTop_toBottomOf="@id/text_rezept_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- 5) Portionsanzahl und EditText nebeneinander in ConstraintLayout -->
+        <!-- 5) Portionsanzeige und Eingabefeld nebeneinander -->
         <TextView
             android:id="@+id/text_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Portionen:"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintTop_toBottomOf="@id/text_zeit"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/edit_portionen"
-            android:layout_width="60dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:hint="1"
             android:inputType="number"
             app:layout_constraintTop_toBottomOf="@id/text_zeit"
             app:layout_constraintStart_toEndOf="@id/text_amount" />
 
-        <!-- 6) Zutatenliste (LinearLayout mit Checkboxen) fließt unter Portionsangabe -->
+        <!-- 6) Zutatenliste unter Portions-Eingabe -->
         <LinearLayout
             android:id="@+id/layout_zutaten_liste"
             android:layout_width="0dp"
@@ -92,71 +91,80 @@
             app:layout_constraintTop_toBottomOf="@id/edit_portionen"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-
-            <!-- Einzelne Checkbox-Items werden programmatisch eingefügt -->
+            <!-- Checkbox-Items werden hier programmatisch eingefügt -->
         </LinearLayout>
 
-        <!-- 7) Zubereitungsanleitung darunter -->
+        <!-- 7) Zubereitungsanleitung unter der Zutatenliste -->
         <TextView
             android:id="@+id/text_zubereitung"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Zubereitungstext…"
-            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintTop_toBottomOf="@id/layout_zutaten_liste"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- 8) Sternebewertung: horizontale Reihe von ImageButtons -->
-        <LinearLayout
-            android:id="@+id/layout_rating_buttons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:orientation="horizontal"
+        <!-- 8) Sternebewertung gleichmäßig verteilt unter Zubereitungstext -->
+        <ImageButton
+            android:id="@+id/button_star_1"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@android:drawable/btn_star_big_off"
             app:layout_constraintTop_toBottomOf="@id/text_zubereitung"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_star_2"
+            app:layout_constraintHorizontal_weight="1" />
 
-            <ImageButton
-                android:id="@+id/button_star_1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@android:drawable/btn_star_big_off" />
+        <ImageButton
+            android:id="@+id/button_star_2"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@android:drawable/btn_star_big_off"
+            app:layout_constraintTop_toBottomOf="@id/text_zubereitung"
+            app:layout_constraintStart_toEndOf="@id/button_star_1"
+            app:layout_constraintEnd_toStartOf="@id/button_star_3"
+            app:layout_constraintHorizontal_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
-            <ImageButton
-                android:id="@+id/button_star_2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@android:drawable/btn_star_big_off"
-                android:layout_marginStart="8dp" />
+        <ImageButton
+            android:id="@+id/button_star_3"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@android:drawable/btn_star_big_off"
+            app:layout_constraintTop_toBottomOf="@id/text_zubereitung"
+            app:layout_constraintStart_toEndOf="@id/button_star_2"
+            app:layout_constraintEnd_toStartOf="@id/button_star_4"
+            app:layout_constraintHorizontal_weight="1" />
 
-            <ImageButton
-                android:id="@+id/button_star_3"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@android:drawable/btn_star_big_off"
-                android:layout_marginStart="8dp" />
+        <ImageButton
+            android:id="@+id/button_star_4"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@android:drawable/btn_star_big_off"
+            app:layout_constraintTop_toBottomOf="@id/text_zubereitung"
+            app:layout_constraintStart_toEndOf="@id/button_star_3"
+            app:layout_constraintEnd_toStartOf="@id/button_star_5"
+            app:layout_constraintHorizontal_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
 
-            <ImageButton
-                android:id="@+id/button_star_4"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@android:drawable/btn_star_big_off"
-                android:layout_marginStart="8dp" />
-
-            <ImageButton
-                android:id="@+id/button_star_5"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@android:drawable/btn_star_big_off"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/button_star_5"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@android:drawable/btn_star_big_off"
+            app:layout_constraintTop_toBottomOf="@id/text_zubereitung"
+            app:layout_constraintStart_toEndOf="@id/button_star_4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

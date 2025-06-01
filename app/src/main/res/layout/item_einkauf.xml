@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="8dp">
 
+    <!-- Mengeneingabe: klein, Gewicht 1 -->
     <EditText
         android:id="@+id/anzahl"
-        android:layout_width="5dp"
+        android:layout_width="19dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="10"
-        android:inputType="text" />
+        android:hint="Menge"
+        android:inputType="numberDecimal"
+        android:padding="4dp" />
 
+    <!-- Einheit (Spinner): mittel, Gewicht 1 -->
+    <Spinner
+        android:id="@+id/spinner_einheit"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="4dp" />
+
+    <!-- Zutatenname: groß, Gewicht 3 -->
     <TextView
         android:id="@+id/item_name"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:paddingStart="8dp"
+        android:padding="4dp"
         android:text="Zutat"
-        android:layout_weight="1"
-        android:paddingStart="8dp" />
+        android:textSize="16sp" />
 
+    <!-- Checkbox zum Markieren: Wrap Content -->
     <CheckBox
         android:id="@+id/item_checkbox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="4dp" />
 </LinearLayout>
-
-

@@ -1,6 +1,7 @@
 package com.example.meinkochbuch;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -87,7 +88,8 @@ public class ExampleInstrumentedTest {
         assert !recipe.isCategorizedAs(Category.VEGETARIAN);
 
         // -- ShoppingList --
-        RecipeManager.getInstance().addShoppingListItem(sugar, 5, Unit.CUBE);
+        ShoppingListItem main = RecipeManager.getInstance().addShoppingListItem(sugar, 5, Unit.CUBE);
+        System.out.println("ShoppingListItem id = "+main.getId());
         Collection<ShoppingListItem> items = RecipeManager.getInstance().getShoppingList();
         assert items.stream().anyMatch(item -> item.getIngredient() == sugar);
 

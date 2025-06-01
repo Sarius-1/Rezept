@@ -1,6 +1,8 @@
 package com.example.meinkochbuch.io;
 
 import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -65,6 +67,14 @@ public final class ImageDatabase {
         return false;
     }
 
+    public Bitmap loadImage(@NotNull String nameWithoutExtension){
+        for(File file : folder.listFiles()){
+            if(!file.getName().startsWith(nameWithoutExtension))continue;
+            return BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+        return null;
+    }
+
     private String getFileExtensionFromUri(Uri uri) {
         String extension = null;
 
@@ -84,8 +94,13 @@ public final class ImageDatabase {
 
     public void deleteFile(@NotNull String nameWithoutExtension){
         for(File file : folder.listFiles()){
-
+            if(file.getName().startsWith(nameWithoutExtension)){
+                file.delete();
+                return;
+            }
         }
     }
+
+
 
 }

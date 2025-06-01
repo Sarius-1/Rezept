@@ -1,6 +1,7 @@
 package com.example.meinkochbuch.core.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -273,6 +274,10 @@ public final class RecipeManager {
         Log.i(TAG, "Ingredient removed!");
     }
 
+    public Collection<Ingredient> getAllIngredients() {
+        return INGREDIENTS_BY_LOWERCASE_NAME.values();
+    }
+
     // -- Recipe --
 
     /**
@@ -343,6 +348,7 @@ public final class RecipeManager {
         for(RecipeIngredient ingredient : recipe.ingredients)sqlRecipeIngredient.delete(ingredient);
         sqlRecipe.delete(recipe);
         RECIPE_BY_ID.remove(recipe.id);
+        ImageDatabase.getInstance().deleteFile(getImageFileName(recipe));
         Log.i(TAG, "Recipe deleted!");
         return true;
     }
@@ -385,7 +391,15 @@ public final class RecipeManager {
             Log.e(TAG, "Tried to add image to recipe (ID:"+recipe.id+") but it isn't registered!");
             return false;
         }
-        return ImageDatabase.getInstance().saveFile(imageUri, "recipe"+recipe.id);
+        return ImageDatabase.getInstance().saveFile(imageUri, getImageFileName(recipe));
+    }
+
+    public Bitmap getRecipeImage(@NotNull Recipe recipe){
+        return ImageDatabase.getInstance().loadImage(getImageFileName(recipe));
+    }
+
+    private String getImageFileName(Recipe recipe){
+        return "recipe"+recipe.id;
     }
 
     // -- Categories --
@@ -529,9 +543,7 @@ public final class RecipeManager {
         return set;
     }
 
-    public Collection<Ingredient> getAllIngredients() {
-        return INGREDIENTS_BY_LOWERCASE_NAME.values();
-    }
+
 }
 
 

@@ -87,6 +87,19 @@ public class RezeptFragment extends Fragment {
                 }
             });
 
+            binding.imageRezept.setImageBitmap(manager.getRecipeImage(currentRecipe));
+
+            binding.fabDeleteRezept.setOnClickListener(v -> {
+                // a) Rezept tatsächlich löschen (wenn deine RecipeManager‐Klasse das unterstützt)
+                boolean deleted = manager.deleteRecipe(currentRecipe);
+                if (deleted) {
+                    Toast.makeText(requireContext(), "Rezept gelöscht", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "Löschen fehlgeschlagen", Toast.LENGTH_SHORT).show();
+                }
+                navController.navigate(R.id.FirstFragment);
+            });
+
             // 4) Sterne‐Buttons initialisieren
             setupRatingButtons();
 

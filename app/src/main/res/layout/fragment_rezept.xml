@@ -167,7 +167,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1" />
 
-        <!-- 9) FAB rechts oben unterhalb des Bildes schwebend -->
+        <!-- 9a) FAB „Löschen“ unten links -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_delete_rezept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Löschen"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            app:srcCompat="@android:drawable/ic_menu_delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- 9b) FAB „Bearbeiten“ unten rechts -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"

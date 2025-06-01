@@ -36,6 +36,7 @@
             <TextView
                 android:id="@+id/textTitle"
                 android:layout_width="match_parent"
+                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:text="Rezepttitel"
                 android:textSize="18sp"
@@ -102,7 +103,7 @@
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bild wählen"
+            android:text="Auswählen"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

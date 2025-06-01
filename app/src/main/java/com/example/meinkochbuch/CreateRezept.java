@@ -2,6 +2,7 @@ package com.example.meinkochbuch;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,11 +22,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.meinkochbuch.core.model.Category;
+import com.example.meinkochbuch.core.model.Recipe;
+import com.example.meinkochbuch.core.model.RecipeIngredient;
+import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.Unit;
 import com.example.meinkochbuch.databinding.FragmentCreateRezeptBinding;
 import com.example.meinkochbuch.databinding.ItemZutatBinding;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateRezept extends Fragment {
@@ -80,13 +86,56 @@ public class CreateRezept extends Fragment {
         viewModel = new ViewModelProvider(requireActivity())
                 .get(CreateRezeptViewModel.class);
 
-        // 1) Falls noch keine IngredientEntry, einmalig hinzufügen
+        // 1) Prüfen, ob beim Navigieren ein Recipe mitgegeben wurde
+        Recipe passedRecipe;
+        if (getArguments() != null) {
+            passedRecipe = CreateRezeptArgs.fromBundle(getArguments()).getCurrentEditedRecipe();
+        } else {
+            passedRecipe = null;
+        }
+
+        if (passedRecipe != null) {
+            // Name, Portions, Time, Description
+            viewModel.setName(passedRecipe.getName());
+            viewModel.setPortions(String.valueOf(passedRecipe.getPortions()));
+            viewModel.setTime(String.valueOf(passedRecipe.getProcessingTime()));
+            viewModel.setDescription(passedRecipe.getGuideText());
+
+
+            Bitmap image = RecipeManager.getInstance().getRecipeImage(passedRecipe);
+            if (image != null) {
+                viewModel.setImage(image);
+            }
+
+            // Kategorien
+            viewModel.setVegan(passedRecipe.getCategories().contains(Category.VEGAN));
+            viewModel.setVegetarian(passedRecipe.getCategories().contains(Category.VEGETARIAN));
+            viewModel.setGlutenFree(passedRecipe.getCategories().contains(Category.GLUTEN_FREE));
+            viewModel.setLactoseFree(passedRecipe.getCategories().contains(Category.LACTOSE_FREE));
+
+            // Zutaten‐Einträge: aus RecipeIngredient in IngredientEntry übersetzen
+            List<CreateRezeptViewModel.IngredientEntry> entries = new ArrayList<>();
+            for (RecipeIngredient ri : passedRecipe.getIngredients()) {
+                CreateRezeptViewModel.IngredientEntry entry = new CreateRezeptViewModel.IngredientEntry();
+                entry.setMenge(String.valueOf(ri.getAmount()));
+                entry.setUnit(ri.getUnit());
+                entry.setZutatName(ri.getIngredient().getName());
+                entries.add(entry);
+            }
+            // Mindestens eine Zeile, falls Recipe keine Zutaten hat
+            if (entries.isEmpty()) {
+                entries.add(new CreateRezeptViewModel.IngredientEntry());
+            }
+            viewModel.setIngredients(entries);
+            binding.btnRezeptSpeichern.setText("Rezept aktualisieren");
+        }
+
+        // 3) Falls noch keine IngredientEntry im ViewModel ist (z.B. erster Aufruf ohne Recipe)
         if (viewModel.getIngredients().getValue() == null) {
             viewModel.addIngredientEntry();
         }
 
-        // 2) Alle LiveData‐Felder aus dem ViewModel in die UI zurückschreiben:
-        //    Name, Portions, Time, Description, Image, CheckBoxen
+        // 4) Alle LiveData‐Felder aus dem ViewModel in die UI zurückschreiben:
         if (viewModel.getName().getValue() != null) {
             binding.etRezeptName.setText(viewModel.getName().getValue());
         }
@@ -102,12 +151,15 @@ public class CreateRezept extends Fragment {
         if (viewModel.getImageUri().getValue() != null) {
             binding.imageRezept.setImageURI(viewModel.getImageUri().getValue());
         }
+        if (viewModel.getImage().getValue() != null) {
+            binding.imageRezept.setImageBitmap(viewModel.getImage().getValue());
+        }
         binding.checkboxVegan.setChecked(Boolean.TRUE.equals(viewModel.getIsVegan().getValue()));
         binding.checkboxVegetarian.setChecked(Boolean.TRUE.equals(viewModel.getIsVegetarian().getValue()));
         binding.checkboxGlutenFree.setChecked(Boolean.TRUE.equals(viewModel.getIsGlutenFree().getValue()));
         binding.checkboxLactoseFree.setChecked(Boolean.TRUE.equals(viewModel.getIsLactoseFree().getValue()));
 
-        // 3) Sobald der Nutzer tippt, die LiveData im ViewModel aktualisieren:
+        // 5) Sobald der Nutzer tippt, die LiveData im ViewModel aktualisieren
         binding.etRezeptName.addTextChangedListener(new SimpleTextWatcher(s ->
                 viewModel.setName(s)
         ));
@@ -133,20 +185,19 @@ public class CreateRezept extends Fragment {
                 viewModel.setLactoseFree(isChecked)
         );
 
-
-        // 4) Zutaten‐Einträge neu aufbauen (erstes Mal)
+        // 6) Zutaten‐Einträge neu aufbauen (erstes Mal)
         refreshIngredientViews();
 
-        // 5) “Zutat hinzufügen“ → ViewModel updaten + UI neu zeichnen
+        // 7) “Zutat hinzufügen“ → ViewModel updaten + UI neu zeichnen
         binding.btnZutatHinzufuegen.setOnClickListener(v -> {
             viewModel.addIngredientEntry();
             refreshIngredientViews();
         });
 
-        // 6) Bild‐Auswahl‐Button
+        // 8) Bild‐Auswahl‐Button
         binding.fabBildAuswaehlen.setOnClickListener(v -> showImagePickerDialog());
 
-        // 7) “Rezept speichern“
+        // 9) “Rezept speichern“
         binding.btnRezeptSpeichern.setOnClickListener(v -> {
             // a) ImageUri ist schon aktuell im ViewModel (durch Listener oben),
             //    Name/Portions/... sind ebenfalls aktuell, da wir sie live mitschreiben.
@@ -174,47 +225,47 @@ public class CreateRezept extends Fragment {
                 viewModel.setIngredients(entries);
             }
 
-            // c) Speichern via ViewModel
-            String error = viewModel.saveRecipe();
-            if (error != null) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
-                return;
+            if (passedRecipe == null) {
+                String error = viewModel.saveRecipe();
+                if (error != null) {
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // d) Erfolgsmeldung & Reset
+                Toast.makeText(requireContext(),
+                        getString(R.string.toast_recipe_saved),
+                        Toast.LENGTH_SHORT).show();
+                resetForm();
             }
+            else {
+                // c) Rezept aktualisieren
+                String error = viewModel.updateRecipe(passedRecipe);
+                if (error != null) {
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            // d) Erfolgsmeldung & Reset
-            Toast.makeText(requireContext(),
-                    getString(R.string.toast_recipe_saved),
-                    Toast.LENGTH_SHORT).show();
-            resetForm();
-
+                // d) Erfolgsmeldung & Reset
+                Toast.makeText(requireContext(),
+                        getString(R.string.toast_recipe_saved),
+                        Toast.LENGTH_SHORT).show();
+                resetForm();
+            }
             // e) Zurück navigieren
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(R.id.FirstFragment);
         });
 
+        // 10) „Alles löschen“-Button ganz unten rechts (falls vorhanden)
         binding.buttonClearAll.setOnClickListener(v -> {
-            // alle Eingabefelder löschen:
-            binding.etRezeptName.setText("");
-            binding.etPortionen.setText("");
-            binding.etZubereitungszeit.setText("");
-            binding.etZubereitung.setText("");
-            binding.imageRezept.setImageDrawable(null);
-
-            binding.checkboxVegan.setChecked(false);
-            binding.checkboxVegetarian.setChecked(false);
-            binding.checkboxGlutenFree.setChecked(false);
-            binding.checkboxLactoseFree.setChecked(false);
-
-            // Zutaten-Container leeren:
-            binding.containerZutaten.removeAllViews();
-            // optional: ViewModel-Zustand zurücksetzen usw.
-            viewModel.getIngredients().getValue().clear();
-            viewModel.addIngredientEntry();
-            refreshIngredientViews();
+            resetForm();
         });
 
         return binding.getRoot();
     }
+
+
 
     /** Baut alle IngredientEntry‐Zeilen aus dem ViewModel in den Container. */
     private void refreshIngredientViews() {
@@ -332,6 +383,8 @@ public class CreateRezept extends Fragment {
         binding.checkboxVegetarian.setChecked(false);
         binding.checkboxGlutenFree.setChecked(false);
         binding.checkboxLactoseFree.setChecked(false);
+        viewModel.setImageUri(null);
+        viewModel.setImage(null);
 
         // 2) ViewModel: Zutatenliste zurücksetzen
         List<CreateRezeptViewModel.IngredientEntry> list =
@@ -349,9 +402,7 @@ public class CreateRezept extends Fragment {
         binding = null; // Binding freigeben
     }
 
-    /**
-     * Ein einfacher TextWatcher, der nur afterTextChanged(String) kennt.
-     */
+    /** Ein einfacher TextWatcher, der nur afterTextChanged(String) kennt. */
     private static class SimpleTextWatcher implements android.text.TextWatcher {
         private final java.util.function.Consumer<String> callback;
         protected SimpleTextWatcher(java.util.function.Consumer<String> callback) {

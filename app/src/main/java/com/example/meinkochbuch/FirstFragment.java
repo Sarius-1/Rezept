@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.meinkochbuch.core.model.Category;
@@ -63,7 +64,11 @@ public class FirstFragment extends Fragment {
 
         applyFilter(navController);
 
-        binding.fabAddRecipe.setOnClickListener(v -> navController.navigate(R.id.createRezept));
+        binding.fabAddRecipe.setOnClickListener(v -> {
+            FirstFragmentDirections.ActionFirstFragmentToCreateRezept action =
+                    FirstFragmentDirections.actionFirstFragmentToCreateRezept( null);
+            navController.navigate(action);
+        });
         binding.btnFilter.setOnClickListener(v -> navController.navigate(R.id.filterFragment));
         String query = filterViewModel.getSearchQuery().getValue();
         binding.searchView.setQuery(query != null ? query : "", false);

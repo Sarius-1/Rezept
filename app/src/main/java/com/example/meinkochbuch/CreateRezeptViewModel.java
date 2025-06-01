@@ -1,6 +1,7 @@
 package com.example.meinkochbuch;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -13,9 +14,11 @@ import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.Unit;
+import com.example.meinkochbuch.filter.FilterCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +36,8 @@ public class CreateRezeptViewModel extends AndroidViewModel {
     private final MutableLiveData<String> time = new MutableLiveData<>("");
     private final MutableLiveData<String> description = new MutableLiveData<>("");
     private final MutableLiveData<Uri> imageUri = new MutableLiveData<>(null);
+    private final MutableLiveData<Bitmap> image = new MutableLiveData<>(null);
+    private final MutableLiveData<Long> id = new MutableLiveData<>(null);
 
     // 2) LiveData für Kategorien‐Checkboxen
     private final MutableLiveData<Boolean> isVegan = new MutableLiveData<>(false);
@@ -73,6 +78,8 @@ public class CreateRezeptViewModel extends AndroidViewModel {
     public void setDescription(String s) { description.setValue(s); }
     public void setImageUri(Uri uri)     { imageUri.setValue(uri); }
 
+    public void setImage(Bitmap img)     { image.setValue(img); }
+
     public void setVegan(boolean b)      { isVegan.setValue(b); }
     public void setVegetarian(boolean b) { isVegetarian.setValue(b); }
     public void setGlutenFree(boolean b) { isGlutenFree.setValue(b); }
@@ -105,6 +112,25 @@ public class CreateRezeptViewModel extends AndroidViewModel {
      * Speichert das Rezept über RecipeManager. Gibt bei Fehlern eine Fehlermeldung (String) zurück,
      * oder null, wenn alles erfolgreich gespeichert wurde.
      */
+    public String updateRecipe(Recipe recipe) {
+        int rating = recipe.getRating();
+        RecipeManager.getInstance().deleteRecipe(recipe);
+        Log.d("CreateRezeptVM", "All Recipes " + RecipeManager.getInstance().filter(FilterCriteria.any()));
+        String ret = saveRecipe();
+        if (ret == null && id.getValue() != null) {
+            // Wenn erfolgreich gespeichert, Rating wiederherstellen
+            Recipe newRecipe = RecipeManager.getInstance().getRecipeByID(id.getValue());
+            if (newRecipe != null) {
+                RecipeManager.getInstance().setRating(newRecipe, rating);
+                if (imageUri.getValue() != null) {
+                    RecipeManager.getInstance().setImage(newRecipe, imageUri.getValue());
+                } else if (image.getValue() != null) {
+                    RecipeManager.getInstance().setImage(newRecipe, image.getValue());
+                }
+            }
+        }
+        return ret;
+    }
     public String saveRecipe() {
         String nameStr     = name.getValue()        != null ? name.getValue().trim()        : "";
         String portionsStr = portions.getValue()    != null ? portions.getValue().trim()    : "";
@@ -134,6 +160,7 @@ public class CreateRezeptViewModel extends AndroidViewModel {
 
         RecipeManager manager = RecipeManager.getInstance();
         Recipe recipe = manager.createRecipe(nameStr, timeInt, portionsInt, descStr);
+        id.setValue(recipe.getId());
 
         boolean hasValidIngredient = false;
         List<IngredientEntry> list = ingredients.getValue();

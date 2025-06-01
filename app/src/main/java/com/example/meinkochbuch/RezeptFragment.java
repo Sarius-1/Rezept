@@ -12,14 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeIngredient;
 import com.example.meinkochbuch.core.model.RecipeManager;
-import com.example.meinkochbuch.core.model.ShoppingListItem;
 import com.example.meinkochbuch.databinding.FragmentRezeptBinding;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -32,45 +32,50 @@ public class RezeptFragment extends Fragment {
     private Recipe currentRecipe;
     private int standardPortionen = 1;
     private final Map<CheckBox, RecipeIngredient> checkedZutaten = new HashMap<>();
-    RecipeManager manager = RecipeManager.getInstance();
+    private final RecipeManager manager = RecipeManager.getInstance();
 
     @Getter
     private int currentRating;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Argument per SafeArgs auslesen
         if (getArguments() != null) {
             currentRecipe = RezeptFragmentArgs.fromBundle(requireArguments()).getRecipe();
         }
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Binding initialisieren statt inflate mit findViewById
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        // 1) Binding initialisieren
         binding = FragmentRezeptBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Jetzt ist dieses Fragment an den NavHost angehängt ⇒ Navigation.findNavController(view) funktioniert
+        NavController navController = Navigation.findNavController(view);
 
         if (currentRecipe != null) {
-            // 1) Rezept-Daten in die gebundenen Views setzen
+            // 2) Rezept‐Daten in die gebundenen Views setzen
             binding.textRezeptName.setText(currentRecipe.getName());
             binding.textZubereitung.setText(currentRecipe.getGuideText());
             binding.textZeit.setText(currentRecipe.getProcessingTime() + " Minuten");
-            binding.editPortionen.setText(currentRecipe.getPortions()+"");
+            binding.editPortionen.setText(String.valueOf(currentRecipe.getPortions()));
 
             standardPortionen = currentRecipe.getPortions();
             binding.editPortionen.setHint(String.valueOf(standardPortionen));
             updateZutatenListe(standardPortionen);
 
-            // 2) Listener: wenn Portionszahl geändert wird, Zutatenliste anpassen
+            // 3) Listener: wenn Portionszahl geändert wird, Zutatenliste anpassen
             binding.editPortionen.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
                 @Override
                 public void afterTextChanged(Editable s) {
                     int neuePortionen = standardPortionen;
@@ -82,10 +87,10 @@ public class RezeptFragment extends Fragment {
                 }
             });
 
-            // 3) Sterne-Buttons initialisieren
+            // 4) Sterne‐Buttons initialisieren
             setupRatingButtons();
 
-            // 4) Button: ausgewählte Zutaten zur Einkaufsliste hinzufügen
+            // 5) Button: Zutaten zur Einkaufsliste hinzufügen
             binding.buttonAddToShoppingList.setOnClickListener(v -> {
                 for (Map.Entry<CheckBox, RecipeIngredient> entry : checkedZutaten.entrySet()) {
                     if (entry.getKey().isChecked()) {
@@ -94,28 +99,35 @@ public class RezeptFragment extends Fragment {
                         entry.getKey().setChecked(false);
                     }
                 }
-                Toast.makeText(getContext(), "Zutaten wurden zur Einkaufsliste hinzugefügt", Toast.LENGTH_SHORT).show();
-                // EinkaufslisteFragment.refreshShoppingList();
+                Toast.makeText(requireContext(),
+                        "Zutaten wurden zur Einkaufsliste hinzugefügt",
+                        Toast.LENGTH_SHORT).show();
             });
         }
 
-        return view;
+        binding.floatingActionButton.setOnClickListener(v -> {
+            RezeptFragmentDirections.ActionRezeptToCreateRezept action =
+                    RezeptFragmentDirections
+                            .actionRezeptToCreateRezept(currentRecipe);
+            navController.navigate(action);
+        });
     }
 
     private void setupRatingButtons() {
-        int currentRating = currentRecipe.getRating();
-        // Sterne-Buttons über Binding referenzieren
+        int rating = currentRecipe.getRating();
+        // Stern‐Icons setzen
         binding.buttonStar1.setImageResource(
-                (1 <= currentRating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+                (1 <= rating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
         binding.buttonStar2.setImageResource(
-                (2 <= currentRating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+                (2 <= rating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
         binding.buttonStar3.setImageResource(
-                (3 <= currentRating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+                (3 <= rating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
         binding.buttonStar4.setImageResource(
-                (4 <= currentRating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+                (4 <= rating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
         binding.buttonStar5.setImageResource(
-                (5 <= currentRating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+                (5 <= rating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
 
+        // Klick‐Listener
         binding.buttonStar1.setOnClickListener(v -> setRating(1));
         binding.buttonStar2.setOnClickListener(v -> setRating(2));
         binding.buttonStar3.setOnClickListener(v -> setRating(3));
@@ -124,8 +136,8 @@ public class RezeptFragment extends Fragment {
     }
 
     private void setRating(int rating) {
-        currentRating = rating;
-        // Stern-Icons entsprechend aktualisieren
+        this.currentRating = rating;
+        // Stern‐Icons updaten
         binding.buttonStar1.setImageResource(
                 (1 <= rating) ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
         binding.buttonStar2.setImageResource(
@@ -144,6 +156,7 @@ public class RezeptFragment extends Fragment {
         if (currentRecipe == null) return;
         binding.layoutZutatenListe.removeAllViews();
         checkedZutaten.clear();
+
         float faktor = portionen / (float) standardPortionen;
         for (RecipeIngredient ri : currentRecipe.getIngredients()) {
             double menge = ri.getAmount() * faktor;
@@ -152,6 +165,7 @@ public class RezeptFragment extends Fragment {
                     menge,
                     ri.getUnit().getLocalizedName(),
                     ri.getIngredient().getName());
+
             CheckBox checkBox = new CheckBox(requireContext());
             checkBox.setText(text);
             checkBox.setChecked(true);
@@ -163,6 +177,6 @@ public class RezeptFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        binding = null; // Remember to free the binding reference
     }
 }

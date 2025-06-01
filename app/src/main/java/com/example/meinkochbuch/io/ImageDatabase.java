@@ -67,6 +67,37 @@ public final class ImageDatabase {
         return false;
     }
 
+/**
+ * Saves a bitmap file in the specified folder (e\.g\. as PNG\).
+ *
+ * @param bitmap               The bitmap to save\.
+ * @param nameWithoutExtension File name without extension \(e\.g\. "myImage"\)\.
+ * @return true if the file exists after saving; false otherwise\.
+ */
+    public boolean saveFile(@NotNull Bitmap bitmap, @NotNull String nameWithoutExtension) {
+        try {
+            Bitmap.CompressFormat format = Bitmap.CompressFormat.PNG;
+            int quality = 100;
+
+            File outputFile = new File(folder, nameWithoutExtension + ".png");
+            if (outputFile.exists()) {
+                outputFile.delete();
+            }
+
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            boolean compressed = bitmap.compress(format, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            return compressed && outputFile.exists();
+
+        } catch (IOException e) {
+            Log.e("ImageDatabase", "Couldn't write bitmap to file " + nameWithoutExtension + "!", e);
+        }
+        return false;
+    }
+
+
     public Bitmap loadImage(@NotNull String nameWithoutExtension){
         for(File file : folder.listFiles()){
             if(!file.getName().startsWith(nameWithoutExtension))continue;

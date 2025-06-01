@@ -19,21 +19,52 @@
         <action
             android:id="@+id/action_FirstFragment_to_filterFragment2"
             app:destination="@id/filterFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_createRezept"
+            app:destination="@id/createRezept" />
     </fragment>
     <fragment
         android:id="@+id/rezept"
         android:name="com.example.meinkochbuch.RezeptFragment"
-        android:label="fragment_rezept">
+        android:label="fragment_rezept"
+        tools:layout="@layout/fragment_rezept">
+
+        <!-- 1) Das “recipe”-Argument, das Rezepts aus FirstFragment übergeben wird -->
         <argument
             android:name="recipe"
             app:argType="com.example.meinkochbuch.core.model.Recipe"
             app:nullable="false" />
+
+        <!-- 2) Die Action, mit der wir von Rezept → CreateRezept wechseln wollen -->
+        <action
+            android:id="@+id/action_rezept_to_createRezept"
+            app:destination="@id/createRezept">
+            <!-- Hier muss das gleiche Argument (nur app:...) stehen -->
+            <argument
+                android:name="currentEditedRecipe"
+                app:argType="com.example.meinkochbuch.core.model.Recipe"
+                app:nullable="true" />
+        </action>
     </fragment>
+
     <fragment
         android:id="@+id/createRezept"
         android:name="com.example.meinkochbuch.CreateRezept"
         android:label="fragment_create_rezept"
-        tools:layout="@layout/fragment_create_rezept" />
+        tools:layout="@layout/fragment_create_rezept">
+
+        <!-- Dasselbe Argument muss hier wieder auftauchen (app:...!) -->
+        <argument
+            android:name="currentEditedRecipe"
+            app:argType="com.example.meinkochbuch.core.model.Recipe"
+            app:nullable="true" />
+
+        <action
+            android:id="@+id/action_createRezept_to_rezept"
+            app:destination="@id/rezept" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/einkaufsliste"
         android:name="com.example.meinkochbuch.EinkaufslisteFragment"

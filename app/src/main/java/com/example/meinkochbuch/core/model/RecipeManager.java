@@ -400,6 +400,14 @@ public final class RecipeManager {
         return ImageDatabase.getInstance().saveFile(imageUri, getImageFileName(recipe));
     }
 
+    public boolean setImage(@NotNull Recipe recipe, @NotNull Bitmap image){
+        if(!RECIPE_BY_ID.containsKey(recipe.id)){
+            Log.e(TAG, "Tried to add image to recipe (ID:"+recipe.id+") but it isn't registered!");
+            return false;
+        }
+        return ImageDatabase.getInstance().saveFile(image, getImageFileName(recipe));
+    }
+
     public Bitmap getRecipeImage(@NotNull Recipe recipe){
         return ImageDatabase.getInstance().loadImage(getImageFileName(recipe));
     }

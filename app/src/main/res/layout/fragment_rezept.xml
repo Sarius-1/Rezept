@@ -32,9 +32,9 @@
             android:text="Rezeptname"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/image_rezept"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/image_rezept" />
 
         <!-- 3) Button „Zur Einkaufsliste“ rechts oben neben dem Namen -->
         <Button

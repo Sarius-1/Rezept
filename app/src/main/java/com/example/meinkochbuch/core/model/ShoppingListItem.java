@@ -72,7 +72,7 @@ public class ShoppingListItem {
             writer.values.put("Amount", modelObj.amount);
             writer.values.put("Unit", modelObj.unit.name());
             writer.values.put("Checked", modelObj.checked ? 1 : 0);
-            writer.close();
+            modelObj.id = writer.closeGetID();
         }
 
         @Override

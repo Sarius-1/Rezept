@@ -1,44 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_item_zutat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:padding="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/et_menge"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_weight="1"
+        android:hint="@string/hint_amount"
+        android:inputType="numberDecimal" />
 
-        <EditText
-            android:id="@+id/et_menge"
-            android:layout_width="12dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/hint_amount"
-            android:inputType="numberDecimal" />
+    <Spinner
+        android:id="@+id/spinner_einheit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:spinnerMode="dropdown" />
 
-        <Spinner
-            android:id="@+id/spinner_einheit"
-            android:layout_width="81dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:spinnerMode="dropdown" />
+    <EditText
+        android:id="@+id/et_zutat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginStart="8dp"
+        android:hint="@string/hint_ingredient" />
 
-        <EditText
-            android:id="@+id/et_zutat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:hint="@string/hint_ingredient" />
-
-        <ImageButton
-            android:id="@+id/btn_entfernen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/content_description_remove_ingredient"
-            android:src="@android:drawable/ic_delete" />
-    </LinearLayout>
-</FrameLayout>
+    <ImageButton
+        android:id="@+id/btn_entfernen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/content_description_remove_ingredient"
+        android:src="@android:drawable/ic_delete" />
+</LinearLayout>

@@ -28,9 +28,6 @@ import lombok.Getter;
 
 public class RezeptFragment extends Fragment {
 
-    private static final String ARG_REZEPT = "rezept_objekt";
-
-    // Statt einzelner View-Variablen: Binding-Instanz
     private FragmentRezeptBinding binding;
     private Recipe currentRecipe;
     private int standardPortionen = 1;

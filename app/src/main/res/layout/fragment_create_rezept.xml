@@ -10,16 +10,33 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Titel -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- 1) Kopfzeile: Titel links, "Alles löschen"-Button rechts -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_create_recipe"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
-        <!-- Rezeptbild -->
+            <TextView
+                android:id="@+id/label_create_recipe"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/title_create_recipe"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_clear_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alles löschen"
+                android:textAllCaps="false"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- 2) Rezeptbild -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,7 +68,7 @@
                 android:contentDescription="@string/content_description_select_image" />
         </FrameLayout>
 
-        <!-- Kategorien -->
+        <!-- 3) Kategorien -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,7 +107,7 @@
                 android:text="Laktosefrei" />
         </LinearLayout>
 
-        <!-- Rezeptname -->
+        <!-- 4) Rezeptname -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -105,7 +122,7 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Portionen -->
+        <!-- 5) Portionen -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -120,7 +137,7 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Zubereitungszeit -->
+        <!-- 6) Zubereitungszeit -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -135,7 +152,7 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Beschreibung -->
+        <!-- 7) Beschreibung -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -152,7 +169,7 @@
                 android:gravity="top|start" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Zutaten -->
+        <!-- 8) Zutaten -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -174,7 +191,7 @@
             android:text="@string/btn_add_ingredient"
             android:layout_marginBottom="16dp" />
 
-        <!-- Speichern Button -->
+        <!-- 9) Speichern Button -->
         <Button
             android:id="@+id/btn_rezept_speichern"
             android:layout_width="match_parent"
@@ -182,5 +199,6 @@
             android:text="@string/btn_save_recipe"
             android:layout_marginTop="16dp"
             style="@style/Widget.MaterialComponents.Button" />
+
     </LinearLayout>
 </ScrollView>

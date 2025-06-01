@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meinkochbuch.core.model.Recipe;
+import com.example.meinkochbuch.core.model.RecipeManager;
 
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                     FirstFragmentDirections.actionFirstFragmentToRezept(recipeToSend);
             navController.navigate(action);
         });
+        holder.imageRezept.setImageBitmap(RecipeManager.getInstance().getRecipeImage(recipe));
     }
 
     private void setStars(RecipeViewHolder holder, int rating) {

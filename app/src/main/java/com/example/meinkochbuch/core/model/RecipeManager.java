@@ -386,6 +386,12 @@ public final class RecipeManager {
 
     //Images
 
+    /**
+     * Sets an image for a specified recipe.
+     * @param recipe The recipe to set the image for.
+     * @param imageUri The image uri necessary as source to copy the image from.
+     * @return Whether the image saving was successful.
+     */
     public boolean setImage(@NotNull Recipe recipe, @NotNull Uri imageUri){
         if(!RECIPE_BY_ID.containsKey(recipe.id)){
             Log.e(TAG, "Tried to add image to recipe (ID:"+recipe.id+") but it isn't registered!");
@@ -398,6 +404,19 @@ public final class RecipeManager {
         return ImageDatabase.getInstance().loadImage(getImageFileName(recipe));
     }
 
+    /**
+     * Retrieves what the image file name should look like for a given recipe.
+     * This is usually just
+     * <pre>{@code
+     * "recipe" + recipeID
+     * }</pre>
+     * So therefore it could look like:
+     * <pre>{@code
+     * "recipe1"
+     * }</pre>
+     * @param recipe
+     * @return
+     */
     private String getImageFileName(Recipe recipe){
         return "recipe"+recipe.id;
     }
@@ -522,6 +541,14 @@ public final class RecipeManager {
         sqlShoppingListItem.setAmount(item, amount);
         item.amount = amount;
         Log.i(TAG, "Item (ID:"+item.id+") amount was changed to "+amount+"!");
+    }
+
+    public void setShoppingListItemUnit(@NotNull ShoppingListItem item, Unit unit){
+        if(unit == item.unit)return;
+        Log.i(TAG, "Setting item (ID:"+item.id+") unit to "+unit+"...");
+        sqlShoppingListItem.setUnit(item, unit);
+        item.unit = unit;
+        Log.i(TAG, "Item (ID:"+item.id+") unit was changed to "+unit+"!");
     }
 
     // -- Filter --

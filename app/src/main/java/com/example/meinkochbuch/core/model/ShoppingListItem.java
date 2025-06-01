@@ -95,6 +95,13 @@ public class ShoppingListItem {
                     new String[]{String.valueOf(item.id)});
         }
 
+        public void setUnit(ShoppingListItem item, Unit unit){
+            ContentValues values = new ContentValues();
+            values.put("Unit", unit.name());
+            database.getWritableDatabase().update(tableName, values, "ID = ?",
+                    new String[]{String.valueOf(item.id)});
+        }
+
         @Override
         public Collection<ShoppingListItem> loadAll() {
             DatabaseHelper.DatabaseReader reader = database.read("SELECT * FROM "+tableName+" ORDER BY ID ASC");

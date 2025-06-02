@@ -19,6 +19,7 @@ import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeIngredient;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.databinding.FragmentRezeptBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -90,15 +91,19 @@ public class RezeptFragment extends Fragment {
             binding.imageRezept.setImageBitmap(manager.getRecipeImage(currentRecipe));
 
             binding.fabDeleteRezept.setOnClickListener(v -> {
-                // a) Rezept tatsächlich löschen (wenn deine RecipeManager‐Klasse das unterstützt)
-                boolean deleted = manager.deleteRecipe(currentRecipe);
-                if (deleted) {
-                    Toast.makeText(requireContext(), getString(R.string.rezept_gelöscht), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(requireContext(), getString(R.string.löschen_fehlgeschlagen), Toast.LENGTH_SHORT).show();
-                }
-                navController.navigate(R.id.FirstFragment);
+                Snackbar.make(requireView(), getString(R.string.wirklich_löschen), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.ja), v2 -> {
+                            boolean deleted = manager.deleteRecipe(currentRecipe);
+                            if (deleted) {
+                                Toast.makeText(requireContext(), getString(R.string.rezept_gelöscht), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(requireContext(), getString(R.string.löschen_fehlgeschlagen), Toast.LENGTH_SHORT).show();
+                            }
+                            navController.navigate(R.id.FirstFragment);
+                        })
+                        .show();
             });
+
 
             // 4) Sterne‐Buttons initialisieren
             setupRatingButtons();

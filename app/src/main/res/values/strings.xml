@@ -115,4 +115,7 @@
     <string name="rezept_gelöscht">Rezept gelöscht</string>
     <string name="löschen_fehlgeschlagen">Löschen fehlgeschlagen</string>
     <string name="zutaten_wurden_zur_einkaufsliste_hinzugefügt">Zutaten wurden zur Einkaufsliste hinzugefügt</string>
+    <string name="wirklich_löschen">Möchtest du das Rezept wirklich löschen?</string>
+    <string name="ja">Ja</string>
+    <string name="nein">Nein</string>
 </resources>

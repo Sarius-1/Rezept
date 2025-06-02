@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateWeatherInfo() {
-        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+getString(R.string.appid)+getString(R.string.open_weather_api_key);
+        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+getString(R.string.open_weather_api_key);
         try{
             HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
             if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         if (granted) {
             // Permission granted, proceed with location access
             Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
+            initWeatherCycle();
         } else {
             // Permission denied, show a message to the user
             Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();

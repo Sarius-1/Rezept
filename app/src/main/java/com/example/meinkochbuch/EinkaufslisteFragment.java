@@ -26,7 +26,7 @@ import java.util.List;
 
 public class EinkaufslisteFragment extends Fragment {
 
-    private static final String TAG = "EinkaufslisteFragment";
+
 
     private static EinkaufsAdapter adapter;
     private static List<ShoppingListItem> einkaufsliste;
@@ -70,11 +70,11 @@ public class EinkaufslisteFragment extends Fragment {
             String nameText   = binding.etZutat.getText().toString().trim();
 
             if (TextUtils.isEmpty(amountText)) {
-                Toast.makeText(requireContext(), "Bitte Menge eingeben", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.bitte_menge_eingeben), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (TextUtils.isEmpty(nameText)) {
-                Toast.makeText(requireContext(), "Bitte Zutat eingeben", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.bitte_zutat_eingeben), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -82,11 +82,11 @@ public class EinkaufslisteFragment extends Fragment {
             try {
                 amount = Double.parseDouble(amountText);
                 if (amount <= 0) {
-                    Toast.makeText(requireContext(), "Menge muss größer 0 sein", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.menge_muss_größer_0_sein), Toast.LENGTH_SHORT).show();
                     return;
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(requireContext(), "Ungültige Zahl", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.ungültige_zahl), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -112,8 +112,9 @@ public class EinkaufslisteFragment extends Fragment {
 
             // 6.h) Bestätigung per Toast
             Toast.makeText(requireContext(),
-                    "Zutat „" + nameText + "“ (" + amount + " " + selectedUnit.getLocalizedName() + ") hinzugefügt",
+                    getString(R.string.Zutaten) + nameText + "“ (" + amount + " " + selectedUnit.getLocalizedName() + ") hinzugefügt",
                     Toast.LENGTH_SHORT).show();
+
         });
 
         return view;
@@ -122,7 +123,6 @@ public class EinkaufslisteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume – Adapter aktualisieren");
         refreshShoppingList();
     }
 
@@ -134,13 +134,11 @@ public class EinkaufslisteFragment extends Fragment {
 
     public static void refreshShoppingList() {
         if (adapter == null || einkaufsliste == null) {
-            Log.w(TAG, "refreshShoppingList: Adapter oder Liste noch nicht initialisiert.");
+
             return;
         }
-        Log.d(TAG, "refreshShoppingList: Lade aktuelle Einträge");
         einkaufsliste.clear();
         einkaufsliste.addAll(RecipeManager.getInstance().getShoppingList());
-        Log.d(TAG, "refreshShoppingList: Neue Liste: " + einkaufsliste);
         adapter.notifyDataSetChanged();
     }
 }

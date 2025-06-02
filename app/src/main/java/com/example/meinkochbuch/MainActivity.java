@@ -134,37 +134,36 @@ public class MainActivity extends AppCompatActivity {
                                     location.getLatitude(), location.getLongitude(), 1);
                             if (addresses != null && !addresses.isEmpty()) {
                                 city = addresses.get(0).getLocality();
-                                Log.d("MainActivity", "City: " + city);
                                 new Thread(MainActivity.this::updateWeatherInfo).start();
                             }
                         } catch (IOException e) {
-                            Log.w("Weather", "An exception was thrown while building weather service", e);
+                            Log.w(getString(R.string.weather), getString(R.string.an_exception_was_thrown_while_building_weather_service), e);
                         }
                     });
         }
     }
 
     private void updateWeatherInfo() {
-        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+getString(R.string.open_weather_api_key);
+        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+getString(R.string.appid)+getString(R.string.open_weather_api_key);
         try{
             HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
             if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
                 return;
             }
-            String response = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines().collect(Collectors.joining("\n"));
+            String response = new BufferedReader(new InputStreamReader(connection.getInputStream())).lines().collect(Collectors.joining(getString(R.string.n)));
             JSONObject json = new JSONObject(response);
             connection.disconnect();
             Weather weather = new Weather();
-            weather.setCity(json.getString("name"));
-            if (json.has("main")) {
-                JSONObject main = json.getJSONObject("main");
-                weather.setTemperature(main.getDouble("temp") - 273.15);
+            weather.setCity(json.getString(getString(R.string.name)));
+            if (json.has(getString(R.string.main))) {
+                JSONObject main = json.getJSONObject(getString(R.string.main));
+                weather.setTemperature(main.getDouble(getString(R.string.temp)) - 273.15);
             }
-            if(json.has("weather")){
-                JSONArray weatherArray = json.getJSONArray("weather");
+            if(json.has(getString(R.string.weather_1))){
+                JSONArray weatherArray = json.getJSONArray(getString(R.string.weather_1));
                 if(weatherArray.length() > 0){
                     JSONObject weatherObject = weatherArray.getJSONObject(0);
-                    weather.setIcon(retrieveWeateherImage(weatherObject.getString("icon")));
+                    weather.setIcon(retrieveWeateherImage(weatherObject.getString(getString(R.string.icon))));
                 }
             }
 
@@ -186,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap retrieveWeateherImage(String imageName){
         try {
-            HttpsURLConnection con = (HttpsURLConnection) new URL("https://openweathermap.org/img/wn/" + imageName + ".png").openConnection();
+            HttpsURLConnection con = (HttpsURLConnection) new URL("https://openweathermap.org/img/wn/" + imageName + getString(R.string.png)).openConnection();
             Bitmap bitmap = BitmapFactory.decodeStream(con.getInputStream());
             con.disconnect();
             return bitmap;
@@ -199,10 +198,10 @@ public class MainActivity extends AppCompatActivity {
     private void processRequestPermissionResult(Boolean granted) {
         if (granted) {
             // Permission granted, proceed with location access
-            Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
         } else {
             // Permission denied, show a message to the user
-            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"
-                android:text="Rezepttitel"
+                android:text="@string/rezepttitel"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -103,7 +103,7 @@
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Auswählen"
+            android:text="@string/auswählen"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

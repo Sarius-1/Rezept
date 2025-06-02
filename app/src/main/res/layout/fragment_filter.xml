@@ -15,7 +15,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Auf Zutaten filtern:" />
+            android:text="@string/auf_zutaten_filtern" />
 
         <LinearLayout
             android:id="@+id/zutatenFilterContainer"
@@ -26,12 +26,12 @@
             android:id="@+id/buttonAddZutat"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Filter für Zutat hinzufügen"/>
+            android:text="@string/filter_für_zutat_hinzufügen"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bewertung von - bis:" />
+            android:text="@string/bewertung_von_bis" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -58,7 +58,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Zeit in Minuten (von - bis):" />
+            android:text="@string/zeit_in_minuten_von_bis" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -87,7 +87,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nach Kategorien FIltern:" />
+            android:text="@string/nach_kategorien_filtern" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -99,25 +99,25 @@
                 android:id="@+id/checkbox_vegan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vegan" />
+                android:text="@string/vegan" />
 
             <CheckBox
                 android:id="@+id/checkbox_vegetarian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vegetarisch" />
+                android:text="@string/vegetarisch" />
 
             <CheckBox
                 android:id="@+id/checkbox_gluten_free"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Glutenfrei" />
+                android:text="@string/glutenfrei" />
 
             <CheckBox
                 android:id="@+id/checkbox_lactose_free"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Laktosefrei" />
+                android:text="@string/laktosefrei" />
         </LinearLayout>
 
 
@@ -132,13 +132,13 @@
                 android:id="@+id/buttonReset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Zurücksetzen" />
+                android:text="@string/zurücksetzen" />
 
             <Button
                 android:id="@+id/buttonApply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Anwenden"
+                android:text="@string/anwenden"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
     </LinearLayout>

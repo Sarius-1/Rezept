@@ -77,7 +77,7 @@ public class FilterFragment extends Fragment {
         Integer timeMax = parseInteger(binding.editTextTimeMax.getText().toString());
 
         if (timeMin != null && timeMax != null && timeMin > timeMax) {
-            Toast.makeText(getContext(), "Zeit: Min darf nicht größer als Max sein!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.zeit_min_darf_nicht_größer_als_max_sein), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -155,15 +155,16 @@ public class FilterFragment extends Fragment {
         if (mViewModel.getRatingMax().getValue() != null)
             binding.spinnerRatingMax.setSelection(((ArrayAdapter<Integer>) binding.spinnerRatingMax.getAdapter()).getPosition(mViewModel.getRatingMax().getValue()));
 
-        binding.editTextTimeMin.setText(mViewModel.getTimeMin().getValue() != null ? mViewModel.getTimeMin().getValue().toString() : "");
-        binding.editTextTimeMax.setText(mViewModel.getTimeMax().getValue() != null ? mViewModel.getTimeMax().getValue().toString() : "");
-        binding.checkboxVegan.setChecked(Boolean.TRUE.equals(mViewModel.getIsVegan().getValue()));
-        binding.checkboxVegetarian.setChecked(Boolean.TRUE.equals(mViewModel.getIsVegetarian().getValue()));
-        binding.checkboxGlutenFree.setChecked(Boolean.TRUE.equals(mViewModel.getIsGlutenFree().getValue()));
-        binding.checkboxLactoseFree.setChecked(Boolean.TRUE.equals(mViewModel.getIsLactoseFree().getValue()));
+        binding.editTextTimeMin.setText(mViewModel.getTimeMin().getValue() != null ? mViewModel.getTimeMin().getValue().toString() : "getString(R.string.binding_edittexttimemax_settext_mviewmodel_gettimemax_getvalue_null_mviewmodel_gettimemax_getvalue_tostring)getString(R.string.binding_checkboxvegan_setchecked_boolean_true_equals_mviewmodel_getisvegan_getvalue_binding_checkboxvegetarian_setchecked_boolean_true_equals_mviewmodel_getisvegetarian_getvalue_binding_checkboxglutenfree_setchecked_boolean_true_equals_mviewmodel_getisglutenfree_getvalue_binding_checkboxlactosefree_setchecked_boolean_true_equals_mviewmodel_getislactosefree_getvalue_private_void_clearinputs_binding_spinnerratingmin_setselection_0_binding_spinnerratingmax_setselection_5_binding_edittexttimemin_settext)getString(R.string.binding_edittexttimemax_settext)");
+        // Kategorie-Spinner wurde entfernt – kein setSelection notwendig
+        binding.zutatenFilterContainer.removeAllViews();
 
+        // Checkboxen zurücksetzen
+        ((CheckBox) requireView().findViewById(R.id.checkbox_vegan)).setChecked(false);
+        ((CheckBox) requireView().findViewById(R.id.checkbox_vegetarian)).setChecked(false);
+        ((CheckBox) requireView().findViewById(R.id.checkbox_gluten_free)).setChecked(false);
+        ((CheckBox) requireView().findViewById(R.id.checkbox_lactose_free)).setChecked(false);
     }
-
     private void clearInputs() {
         binding.spinnerRatingMin.setSelection(0);
         binding.spinnerRatingMax.setSelection(5);

@@ -65,7 +65,7 @@ public class RezeptFragment extends Fragment {
             // 2) Rezept‐Daten in die gebundenen Views setzen
             binding.textRezeptName.setText(currentRecipe.getName());
             binding.textZubereitung.setText(currentRecipe.getGuideText());
-            binding.textZeit.setText(currentRecipe.getProcessingTime() + " Minuten");
+            binding.textZeit.setText(currentRecipe.getProcessingTime() + getString(R.string.minuten));
             binding.editPortionen.setText(String.valueOf(currentRecipe.getPortions()));
 
             standardPortionen = currentRecipe.getPortions();
@@ -93,9 +93,9 @@ public class RezeptFragment extends Fragment {
                 // a) Rezept tatsächlich löschen (wenn deine RecipeManager‐Klasse das unterstützt)
                 boolean deleted = manager.deleteRecipe(currentRecipe);
                 if (deleted) {
-                    Toast.makeText(requireContext(), "Rezept gelöscht", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.rezept_gelöscht), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(requireContext(), "Löschen fehlgeschlagen", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.löschen_fehlgeschlagen), Toast.LENGTH_SHORT).show();
                 }
                 navController.navigate(R.id.FirstFragment);
             });
@@ -113,7 +113,7 @@ public class RezeptFragment extends Fragment {
                     }
                 }
                 Toast.makeText(requireContext(),
-                        "Zutaten wurden zur Einkaufsliste hinzugefügt",
+                        getString(R.string.zutaten_wurden_zur_einkaufsliste_hinzugefügt),
                         Toast.LENGTH_SHORT).show();
             });
         }

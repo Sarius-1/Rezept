@@ -31,7 +31,7 @@
                 android:id="@+id/button_clear_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Alles löschen"
+                android:text="@string/alles_löschen"
                 android:textAllCaps="false"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -72,7 +72,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kategorien"
+            android:text="@string/kategorien"
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
 
@@ -86,25 +86,25 @@
                 android:id="@+id/checkbox_vegan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vegan" />
+                android:text="@string/vegan" />
 
             <CheckBox
                 android:id="@+id/checkbox_vegetarian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vegetarisch" />
+                android:text="@string/vegetarisch" />
 
             <CheckBox
                 android:id="@+id/checkbox_gluten_free"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Glutenfrei" />
+                android:text="@string/glutenfrei" />
 
             <CheckBox
                 android:id="@+id/checkbox_lactose_free"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Laktosefrei" />
+                android:text="@string/laktosefrei" />
         </LinearLayout>
 
         <!-- 4) Rezeptname -->

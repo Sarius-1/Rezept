@@ -115,7 +115,6 @@ public class CreateRezeptViewModel extends AndroidViewModel {
     public String updateRecipe(Recipe recipe) {
         int rating = recipe.getRating();
         RecipeManager.getInstance().deleteRecipe(recipe);
-        Log.d("CreateRezeptVM", "All Recipes " + RecipeManager.getInstance().filter(FilterCriteria.any()));
         String ret = saveRecipe();
         if (ret == null && id.getValue() != null) {
             // Wenn erfolgreich gespeichert, Rating wiederherstellen

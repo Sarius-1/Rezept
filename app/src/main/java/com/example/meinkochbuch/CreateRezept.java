@@ -127,7 +127,7 @@ public class CreateRezept extends Fragment {
                 entries.add(new CreateRezeptViewModel.IngredientEntry());
             }
             viewModel.setIngredients(entries);
-            binding.btnRezeptSpeichern.setText("Rezept aktualisieren");
+            binding.btnRezeptSpeichern.setText(getString(R.string.rezept_aktualisieren));
         }
 
         // 3) Falls noch keine IngredientEntry im ViewModel ist (z.B. erster Aufruf ohne Recipe)

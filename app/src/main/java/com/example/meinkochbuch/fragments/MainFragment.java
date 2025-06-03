@@ -1,4 +1,4 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,14 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.meinkochbuch.viewModel.FilterViewModel;
+import com.example.meinkochbuch.R;
+import com.example.meinkochbuch.adapter.RecipeAdapter;
 import com.example.meinkochbuch.core.model.Category;
 import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
-import com.example.meinkochbuch.databinding.FragmentFirstBinding;
+import com.example.meinkochbuch.databinding.FragmentMainBinding;
 import com.example.meinkochbuch.filter.FilterCriteria;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,9 +30,9 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-public class FirstFragment extends Fragment {
+public class MainFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentMainBinding binding;
 
     @Getter
     @Setter
@@ -55,7 +57,7 @@ public class FirstFragment extends Fragment {
         assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentMainBinding.inflate(inflater, container, false);
 
         if (filterViewModel.getIsVegan().getValue() == null) filterViewModel.getIsVegan().setValue(true);
         if (filterViewModel.getIsVegetarian().getValue() == null) filterViewModel.getIsVegetarian().setValue(true);
@@ -65,8 +67,8 @@ public class FirstFragment extends Fragment {
         applyFilter(navController);
 
         binding.fabAddRecipe.setOnClickListener(v -> {
-            FirstFragmentDirections.ActionFirstFragmentToCreateRezept action =
-                    FirstFragmentDirections.actionFirstFragmentToCreateRezept( null);
+            MainFragmentDirections.ActionFirstFragmentToCreateRezept action =
+                    MainFragmentDirections.actionFirstFragmentToCreateRezept( null);
             navController.navigate(action);
         });
         binding.btnFilter.setOnClickListener(v -> navController.navigate(R.id.filterFragment));

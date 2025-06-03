@@ -1,4 +1,4 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.fragments;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.meinkochbuch.R;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeIngredient;
 import com.example.meinkochbuch.core.model.RecipeManager;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 import lombok.Getter;
 
-public class RezeptFragment extends Fragment {
+public class ViewRecipeFragment extends Fragment {
 
     private FragmentRezeptBinding binding;
     private Recipe currentRecipe;
@@ -43,7 +44,7 @@ public class RezeptFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Argument per SafeArgs auslesen
         if (getArguments() != null) {
-            currentRecipe = RezeptFragmentArgs.fromBundle(requireArguments()).getRecipe();
+            currentRecipe = ViewRecipeFragmentArgs.fromBundle(requireArguments()).getRecipe();
         }
     }
 
@@ -124,8 +125,8 @@ public class RezeptFragment extends Fragment {
         }
 
         binding.floatingActionButton.setOnClickListener(v -> {
-            RezeptFragmentDirections.ActionRezeptToCreateRezept action =
-                    RezeptFragmentDirections
+            ViewRecipeFragmentDirections.ActionRezeptToCreateRezept action =
+                    ViewRecipeFragmentDirections
                             .actionRezeptToCreateRezept(currentRecipe);
             navController.navigate(action);
         });

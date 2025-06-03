@@ -1,11 +1,9 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.adapter;
 
 import android.content.Context;
-import android.graphics.Picture;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
@@ -14,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meinkochbuch.fragments.MainFragmentDirections;
+import com.example.meinkochbuch.R;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
 
@@ -34,7 +34,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_recept, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_recipe, parent, false);
         return new RecipeViewHolder(view);
     }
 
@@ -45,8 +45,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         setStars(holder, recipe.getRating());
         holder.button.setOnClickListener(v -> {
             Recipe recipeToSend = recipeList.get(position);
-            FirstFragmentDirections.ActionFirstFragmentToRezept action =
-                    FirstFragmentDirections.actionFirstFragmentToRezept(recipeToSend);
+            MainFragmentDirections.ActionFirstFragmentToRezept action =
+                    MainFragmentDirections.actionFirstFragmentToRezept(recipeToSend);
             navController.navigate(action);
         });
         holder.imageRezept.setImageBitmap(RecipeManager.getInstance().getRecipeImage(recipe));

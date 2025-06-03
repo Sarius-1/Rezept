@@ -1,4 +1,4 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.viewModel;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.MutableLiveData;

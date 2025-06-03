@@ -1,4 +1,4 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meinkochbuch.R;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.ShoppingListItem;
 import com.example.meinkochbuch.core.model.Unit;
@@ -19,11 +20,11 @@ import com.example.meinkochbuch.core.model.Unit;
 import java.util.Iterator;
 import java.util.List;
 
-public class EinkaufsAdapter extends RecyclerView.Adapter<EinkaufsAdapter.ViewHolder> {
+public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder> {
 
     private final List<ShoppingListItem> items;
 
-    public EinkaufsAdapter(List<ShoppingListItem> items) {
+    public ShoppingListAdapter(List<ShoppingListItem> items) {
         this.items = items;
     }
 
@@ -55,14 +56,14 @@ public class EinkaufsAdapter extends RecyclerView.Adapter<EinkaufsAdapter.ViewHo
 
     @NonNull
     @Override
-    public EinkaufsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ShoppingListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_einkauf, parent, false);
+                .inflate(R.layout.item_shopping_list, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EinkaufsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ShoppingListAdapter.ViewHolder holder, int position) {
         ShoppingListItem item = items.get(position);
 
         holder.anzahl.setText(String.valueOf(item.getAmount()));

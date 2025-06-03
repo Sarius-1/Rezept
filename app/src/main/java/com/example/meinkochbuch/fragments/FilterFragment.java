@@ -1,4 +1,4 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.fragments;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -19,9 +18,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.meinkochbuch.R;
 import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.databinding.FragmentFilterBinding;
+import com.example.meinkochbuch.viewModel.FilterViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,7 +124,7 @@ public class FilterFragment extends Fragment {
 
     private void addIngredientRow(@Nullable Ingredient ingredientToSelect) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
-        View row = inflater.inflate(R.layout.zutaten_filter_container, binding.zutatenFilterContainer, false);
+        View row = inflater.inflate(R.layout.item_ingredient_filter, binding.zutatenFilterContainer, false);
 
         Spinner spinner = row.findViewById(R.id.spinnerZutaten);
         List<String> ingredientNames = RecipeManager.getInstance().getAllIngredients()

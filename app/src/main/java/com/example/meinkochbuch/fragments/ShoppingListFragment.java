@@ -1,8 +1,7 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.fragments;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +13,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.meinkochbuch.R;
+import com.example.meinkochbuch.adapter.ShoppingListAdapter;
 import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.ShoppingListItem;
 import com.example.meinkochbuch.core.model.Unit;
-import com.example.meinkochbuch.databinding.FragmentEinkaufslisteBinding;
+import com.example.meinkochbuch.databinding.FragmentShoppingListBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class EinkaufslisteFragment extends Fragment {
+public class ShoppingListFragment extends Fragment {
 
 
 
-    private static EinkaufsAdapter adapter;
+    private static ShoppingListAdapter adapter;
     private static List<ShoppingListItem> einkaufsliste;
 
-    private FragmentEinkaufslisteBinding binding;
+    private FragmentShoppingListBinding binding;
 
     @Nullable
     @Override
@@ -39,14 +40,14 @@ public class EinkaufslisteFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         // 1) ViewBinding initialisieren
-        binding = FragmentEinkaufslisteBinding.inflate(inflater, container, false);
+        binding = FragmentShoppingListBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         // 2) Einkaufsliste aus RecipeManager laden (vorab aus Datenbank)
         einkaufsliste = new ArrayList<>(RecipeManager.getInstance().getShoppingList());
 
         // 3) Adapter initialisieren und an RecyclerView anhängen
-        adapter = new EinkaufsAdapter(einkaufsliste);
+        adapter = new ShoppingListAdapter(einkaufsliste);
         binding.recyclerViewItems.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewItems.setAdapter(adapter);
 

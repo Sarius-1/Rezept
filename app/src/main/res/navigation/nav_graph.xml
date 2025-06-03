@@ -10,9 +10,9 @@
         android:name="com.example.meinkochbuch.MainActivity" />
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.meinkochbuch.FirstFragment"
+        android:name="com.example.meinkochbuch.fragments.MainFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_FirstFragment_to_rezept"
             app:destination="@id/rezept" />
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/rezept"
-        android:name="com.example.meinkochbuch.RezeptFragment"
+        android:name="com.example.meinkochbuch.fragments.ViewRecipeFragment"
         android:label="fragment_rezept"
         tools:layout="@layout/fragment_rezept">
 
@@ -49,9 +49,9 @@
 
     <fragment
         android:id="@+id/createRezept"
-        android:name="com.example.meinkochbuch.CreateRezept"
+        android:name="com.example.meinkochbuch.fragments.CreateRecipeFragment"
         android:label="fragment_create_rezept"
-        tools:layout="@layout/fragment_create_rezept">
+        tools:layout="@layout/fragment_create_recipe">
 
         <!-- Dasselbe Argument muss hier wieder auftauchen (app:...!) -->
         <argument
@@ -67,13 +67,13 @@
 
     <fragment
         android:id="@+id/einkaufsliste"
-        android:name="com.example.meinkochbuch.EinkaufslisteFragment"
+        android:name="com.example.meinkochbuch.fragments.ShoppingListFragment"
         android:label="fragment_einkaufsliste"
-        tools:layout="@layout/fragment_einkaufsliste">
+        tools:layout="@layout/fragment_shopping_list">
     </fragment>
     <fragment
         android:id="@+id/filterFragment"
-        android:name="com.example.meinkochbuch.FilterFragment"
+        android:name="com.example.meinkochbuch.fragments.FilterFragment"
         android:label="fragment_filter"
         tools:layout="@layout/fragment_filter" >
         <action

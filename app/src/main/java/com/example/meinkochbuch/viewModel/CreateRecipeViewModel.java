@@ -1,4 +1,4 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.viewModel;
 
 import android.app.Application;
 import android.graphics.Bitmap;
@@ -9,16 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.meinkochbuch.R;
 import com.example.meinkochbuch.core.model.Category;
 import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.Unit;
-import com.example.meinkochbuch.filter.FilterCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,7 @@ import lombok.NoArgsConstructor;
  * die Ingredient‐Einträge, und führt die Speichern‐Logik aus.
  */
 @Getter
-public class CreateRezeptViewModel extends AndroidViewModel {
+public class CreateRecipeViewModel extends AndroidViewModel {
 
     // 1) LiveData für die Felder
     private final MutableLiveData<String> name = new MutableLiveData<>("");
@@ -61,7 +60,7 @@ public class CreateRezeptViewModel extends AndroidViewModel {
     private final MutableLiveData<List<IngredientEntry>> ingredients =
             new MutableLiveData<>(new ArrayList<>());
 
-    public CreateRezeptViewModel(@NonNull Application application) {
+    public CreateRecipeViewModel(@NonNull Application application) {
         super(application);
         // direkt einen initialen leeren IngredientEntry hinzufügen
         List<IngredientEntry> list = ingredients.getValue();

@@ -1,4 +1,4 @@
-package com.example.meinkochbuch;
+package com.example.meinkochbuch.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -22,22 +22,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.meinkochbuch.viewModel.CreateRecipeViewModel;
+import com.example.meinkochbuch.R;
 import com.example.meinkochbuch.core.model.Category;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeIngredient;
 import com.example.meinkochbuch.core.model.RecipeManager;
 import com.example.meinkochbuch.core.model.Unit;
-import com.example.meinkochbuch.databinding.FragmentCreateRezeptBinding;
-import com.example.meinkochbuch.databinding.ItemZutatBinding;
+import com.example.meinkochbuch.databinding.FragmentCreateRecipeBinding;
+import com.example.meinkochbuch.databinding.ItemIngredientBinding;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateRezept extends Fragment {
-    private FragmentCreateRezeptBinding binding;
-    private CreateRezeptViewModel viewModel;
-    // … innerhalb von CreateRezept, oberhalb von onCreateView(…):
+public class CreateRecipeFragment extends Fragment {
+    private FragmentCreateRecipeBinding binding;
+    private CreateRecipeViewModel viewModel;
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -82,14 +83,14 @@ public class CreateRezept extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = FragmentCreateRezeptBinding.inflate(inflater, container, false);
+        binding = FragmentCreateRecipeBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity())
-                .get(CreateRezeptViewModel.class);
+                .get(CreateRecipeViewModel.class);
 
         // 1) Prüfen, ob beim Navigieren ein Recipe mitgegeben wurde
         Recipe passedRecipe;
         if (getArguments() != null) {
-            passedRecipe = CreateRezeptArgs.fromBundle(getArguments()).getCurrentEditedRecipe();
+            passedRecipe = CreateRecipeFragmentArgs.fromBundle(getArguments()).getCurrentEditedRecipe();
         } else {
             passedRecipe = null;
         }
@@ -114,9 +115,9 @@ public class CreateRezept extends Fragment {
             viewModel.setLactoseFree(passedRecipe.getCategories().contains(Category.LACTOSE_FREE));
 
             // Zutaten‐Einträge: aus RecipeIngredient in IngredientEntry übersetzen
-            List<CreateRezeptViewModel.IngredientEntry> entries = new ArrayList<>();
+            List<CreateRecipeViewModel.IngredientEntry> entries = new ArrayList<>();
             for (RecipeIngredient ri : passedRecipe.getIngredients()) {
-                CreateRezeptViewModel.IngredientEntry entry = new CreateRezeptViewModel.IngredientEntry();
+                CreateRecipeViewModel.IngredientEntry entry = new CreateRecipeViewModel.IngredientEntry();
                 entry.setMenge(String.valueOf(ri.getAmount()));
                 entry.setUnit(ri.getUnit());
                 entry.setZutatName(ri.getIngredient().getName());
@@ -124,7 +125,7 @@ public class CreateRezept extends Fragment {
             }
             // Mindestens eine Zeile, falls Recipe keine Zutaten hat
             if (entries.isEmpty()) {
-                entries.add(new CreateRezeptViewModel.IngredientEntry());
+                entries.add(new CreateRecipeViewModel.IngredientEntry());
             }
             viewModel.setIngredients(entries);
             binding.btnRezeptSpeichern.setText(getString(R.string.rezept_aktualisieren));
@@ -199,14 +200,11 @@ public class CreateRezept extends Fragment {
 
         // 9) “Rezept speichern“
         binding.btnRezeptSpeichern.setOnClickListener(v -> {
-            // a) ImageUri ist schon aktuell im ViewModel (durch Listener oben),
-            //    Name/Portions/... sind ebenfalls aktuell, da wir sie live mitschreiben.
-            // b) Zutaten‐Einträge aus UI ins ViewModel kopieren
-            List<CreateRezeptViewModel.IngredientEntry> entries =
+            List<CreateRecipeViewModel.IngredientEntry> entries =
                     viewModel.getIngredients().getValue();
             if (entries != null) {
                 for (int i = 0; i < binding.containerZutaten.getChildCount(); i++) {
-                    ItemZutatBinding itemBinding = ItemZutatBinding.bind(
+                    ItemIngredientBinding itemBinding = ItemIngredientBinding.bind(
                             binding.containerZutaten.getChildAt(i));
 
                     String mengeText = itemBinding.etMenge.getText() != null
@@ -270,15 +268,15 @@ public class CreateRezept extends Fragment {
     /** Baut alle IngredientEntry‐Zeilen aus dem ViewModel in den Container. */
     private void refreshIngredientViews() {
         binding.containerZutaten.removeAllViews();
-        List<CreateRezeptViewModel.IngredientEntry> list =
+        List<CreateRecipeViewModel.IngredientEntry> list =
                 viewModel.getIngredients().getValue();
         if (list == null) return;
 
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         for (int i = 0; i < list.size(); i++) {
-            ItemZutatBinding itemBinding =
-                    ItemZutatBinding.inflate(inflater, binding.containerZutaten, false);
-            CreateRezeptViewModel.IngredientEntry entry = list.get(i);
+            ItemIngredientBinding itemBinding =
+                    ItemIngredientBinding.inflate(inflater, binding.containerZutaten, false);
+            CreateRecipeViewModel.IngredientEntry entry = list.get(i);
 
             // 1) Menge aus ViewModel in EditText
             String mengeVal = entry.getMenge().getValue();
@@ -385,9 +383,7 @@ public class CreateRezept extends Fragment {
         binding.checkboxLactoseFree.setChecked(false);
         viewModel.setImageUri(null);
         viewModel.setImage(null);
-
-        // 2) ViewModel: Zutatenliste zurücksetzen
-        List<CreateRezeptViewModel.IngredientEntry> list =
+        List<CreateRecipeViewModel.IngredientEntry> list =
                 viewModel.getIngredients().getValue();
         if (list != null) {
             list.clear();

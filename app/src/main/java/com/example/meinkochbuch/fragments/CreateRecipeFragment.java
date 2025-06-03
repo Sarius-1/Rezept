@@ -191,9 +191,33 @@ public class CreateRecipeFragment extends Fragment {
 
         // 7) “Zutat hinzufügen“ → ViewModel updaten + UI neu zeichnen
         binding.btnZutatHinzufuegen.setOnClickListener(v -> {
+            // Vor dem Hinzufügen die aktuellen Daten aus der UI ins ViewModel übernehmen
+            List<CreateRecipeViewModel.IngredientEntry> entries = viewModel.getIngredients().getValue();
+            if (entries != null) {
+                for (int i = 0; i < binding.containerZutaten.getChildCount(); i++) {
+                    ItemIngredientBinding itemBinding = ItemIngredientBinding.bind(
+                            binding.containerZutaten.getChildAt(i));
+
+                    String mengeText = itemBinding.etMenge.getText() != null
+                            ? itemBinding.etMenge.getText().toString().trim()
+                            : "";
+                    entries.get(i).setMenge(mengeText);
+
+                    String zutatText = itemBinding.etZutat.getText() != null
+                            ? itemBinding.etZutat.getText().toString().trim()
+                            : "";
+                    entries.get(i).setZutatName(zutatText);
+
+                    Unit selectedUnit = (Unit) itemBinding.spinnerEinheit.getSelectedItem();
+                    entries.get(i).setUnit(selectedUnit);
+                }
+            }
+
+            // Neue leere Zutat hinzufügen
             viewModel.addIngredientEntry();
             refreshIngredientViews();
         });
+
 
         // 8) Bild‐Auswahl‐Button
         binding.fabBildAuswaehlen.setOnClickListener(v -> showImagePickerDialog());

@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
                     weather.setIcon(retrieveWeateherImage(weatherObject.getString(getString(R.string.icon))));
                 }
             }
+            Log.d(getString(R.string.weather), weather.toString());
+
 
             runOnUiThread(() -> {
                 TextView cityView = findViewById(R.id.cityView);

@@ -118,4 +118,6 @@
     <string name="wirklich_löschen">Möchtest du das Rezept wirklich löschen?</string>
     <string name="ja">Ja</string>
     <string name="nein">Nein</string>
+    <string name="max">Max</string>
+    <string name="min">Min</string>
 </resources>

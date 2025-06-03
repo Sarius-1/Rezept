@@ -67,7 +67,7 @@ public class ViewRecipeFragment extends Fragment {
             // 2) Rezept‐Daten in die gebundenen Views setzen
             binding.textRezeptName.setText(currentRecipe.getName());
             binding.textZubereitung.setText(currentRecipe.getGuideText());
-            binding.textZeit.setText(currentRecipe.getProcessingTime() + getString(R.string.minuten));
+            binding.textZeit.setText(currentRecipe.getProcessingTime() + " " +getString(R.string.minuten));
             binding.editPortionen.setText(String.valueOf(currentRecipe.getPortions()));
 
             standardPortionen = currentRecipe.getPortions();

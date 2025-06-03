@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),this::processRequestPermissionResult);
 
-    private final long UPDATE_INTERVAL = TimeUnit.MINUTES.toMillis(5);
+    private final long UPDATE_INTERVAL = TimeUnit.MINUTES.toMillis(1);
 
 
     @Override
@@ -123,11 +123,16 @@ public class MainActivity extends AppCompatActivity {
                     location -> {
                         Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                         try {
-                            List<Address> addresses = geocoder.getFromLocation(
-                                    location.getLatitude(), location.getLongitude(), 1);
+                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                             if (addresses != null && !addresses.isEmpty()) {
-                                city = addresses.get(0).getLocality();
-                                new Thread(MainActivity.this::updateWeatherInfo).start();
+                                String newCity = addresses.get(0).getLocality();
+                                if (newCity != null && !newCity.equals(city)) {
+                                    Log.d("WeatherUpdate", "City changed: " + city + " -> " + newCity);
+                                    city = newCity;
+                                    new Thread(MainActivity.this::updateWeatherInfo).start();
+                                } else {
+                                    Log.d("WeatherUpdate", "City unchanged: " + city);
+                                }
                             }
                         } catch (IOException e) {
                             Log.w(getString(R.string.weather), getString(R.string.an_exception_was_thrown_while_building_weather_service), e);

@@ -39,6 +39,7 @@ import java.util.List;
 public class CreateRecipeFragment extends Fragment {
     private FragmentCreateRecipeBinding binding;
     private CreateRecipeViewModel viewModel;
+    private Recipe passedRecipe;
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -88,7 +89,6 @@ public class CreateRecipeFragment extends Fragment {
                 .get(CreateRecipeViewModel.class);
 
         // 1) Prüfen, ob beim Navigieren ein Recipe mitgegeben wurde
-        Recipe passedRecipe;
         if (getArguments() != null) {
             passedRecipe = CreateRecipeFragmentArgs.fromBundle(getArguments()).getCurrentEditedRecipe();
         } else {
@@ -419,6 +419,9 @@ public class CreateRecipeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (passedRecipe != null) {
+            resetForm();
+        }
         binding = null; // Binding freigeben
     }
 

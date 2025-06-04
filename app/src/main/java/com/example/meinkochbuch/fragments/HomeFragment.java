@@ -18,7 +18,7 @@ import com.example.meinkochbuch.core.model.Category;
 import com.example.meinkochbuch.core.model.Ingredient;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
-import com.example.meinkochbuch.databinding.FragmentMainBinding;
+import com.example.meinkochbuch.databinding.FragmentHomeBinding;
 import com.example.meinkochbuch.filter.FilterCriteria;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,9 +30,9 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-public class MainFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
-    private FragmentMainBinding binding;
+    private FragmentHomeBinding binding;
 
     @Getter
     @Setter
@@ -57,7 +57,7 @@ public class MainFragment extends Fragment {
         assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
 
-        binding = FragmentMainBinding.inflate(inflater, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         if (filterViewModel.getIsVegan().getValue() == null) filterViewModel.getIsVegan().setValue(true);
         if (filterViewModel.getIsVegetarian().getValue() == null) filterViewModel.getIsVegetarian().setValue(true);
@@ -67,8 +67,8 @@ public class MainFragment extends Fragment {
         applyFilter(navController);
 
         binding.fabAddRecipe.setOnClickListener(v -> {
-            MainFragmentDirections.ActionFirstFragmentToCreateRezept action =
-                    MainFragmentDirections.actionFirstFragmentToCreateRezept( null);
+            HomeFragmentDirections.ActionFirstFragmentToCreateRezept action =
+                    HomeFragmentDirections.actionFirstFragmentToCreateRezept( null);
             navController.navigate(action);
         });
         binding.btnFilter.setOnClickListener(v -> navController.navigate(R.id.filterFragment));

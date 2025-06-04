@@ -10,9 +10,9 @@
         android:name="com.example.meinkochbuch.MainActivity" />
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.meinkochbuch.fragments.MainFragment"
+        android:name="com.example.meinkochbuch.fragments.HomeFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_main">
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_FirstFragment_to_rezept"
             app:destination="@id/rezept" />

@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meinkochbuch.fragments.MainFragmentDirections;
+import com.example.meinkochbuch.fragments.HomeFragmentDirections;
 import com.example.meinkochbuch.R;
 import com.example.meinkochbuch.core.model.Recipe;
 import com.example.meinkochbuch.core.model.RecipeManager;
@@ -45,8 +45,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         setStars(holder, recipe.getRating());
         holder.button.setOnClickListener(v -> {
             Recipe recipeToSend = recipeList.get(position);
-            MainFragmentDirections.ActionFirstFragmentToRezept action =
-                    MainFragmentDirections.actionFirstFragmentToRezept(recipeToSend);
+            HomeFragmentDirections.ActionFirstFragmentToRezept action =
+                    HomeFragmentDirections.actionFirstFragmentToRezept(recipeToSend);
             navController.navigate(action);
         });
         holder.imageRezept.setImageBitmap(RecipeManager.getInstance().getRecipeImage(recipe));

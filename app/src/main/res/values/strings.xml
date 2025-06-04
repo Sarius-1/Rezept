@@ -120,4 +120,6 @@
     <string name="nein">Nein</string>
     <string name="max">Max</string>
     <string name="min">Min</string>
+    <string name="bearbeiten">Bearbeiten</string>
+    <string name="l_schen">Löschen</string>
 </resources>

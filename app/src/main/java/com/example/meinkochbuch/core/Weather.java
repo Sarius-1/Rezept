@@ -1,4 +1,4 @@
-package com.example.meinkochbuch.core.model;
+package com.example.meinkochbuch.core;
 
 import android.graphics.Bitmap;
 

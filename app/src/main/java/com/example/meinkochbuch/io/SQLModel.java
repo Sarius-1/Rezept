@@ -24,5 +24,4 @@ public abstract class SQLModel<T> {
     public abstract void delete(T modelObj);
 
     public abstract Collection<T> loadAll();
-
 }

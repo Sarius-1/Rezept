@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.meinkochbuch.core.model.RecipeManager;
-import com.example.meinkochbuch.core.model.Weather;
+import com.example.meinkochbuch.core.Weather;
 import com.example.meinkochbuch.io.ImageDatabase;
 
 import org.json.JSONArray;
